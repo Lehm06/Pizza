@@ -132,10 +132,38 @@ input[type="range"]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;b
 .hydro-warning.ok{background:var(--green-light);color:var(--green);border:1px solid #A8D5BB;}
 
 /* ── STEPS ── */
-.steps-list{list-style:none;counter-reset:step-counter;}
-.steps-list li{counter-increment:step-counter;display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--ink2);line-height:1.5;}
+.steps-list{list-style:none;counter-reset:step-counter;padding:0;}
+.steps-list li{
+  counter-increment:step-counter;
+  display:flex;
+  flex-direction:row;
+  gap:10px;
+  padding:12px 0;
+  border-bottom:1px solid var(--border);
+  font-size:13px;
+  color:var(--ink2);
+  line-height:1.6;
+  align-items:flex-start;
+}
 .steps-list li:last-child{border-bottom:none;}
-.steps-list li::before{content:counter(step-counter);min-width:22px;height:22px;background:var(--ink);color:var(--cream);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0;margin-top:1px;font-family:var(--mono);}
+.steps-list li::before{
+  content:counter(step-counter);
+  min-width:22px;
+  width:22px;
+  height:22px;
+  background:var(--ink);
+  color:var(--cream);
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:11px;
+  font-weight:600;
+  font-family:var(--mono);
+  flex-shrink:0;
+  margin-top:2px;
+}
+.steps-list li > *{flex:1;min-width:0;word-break:normal;overflow-wrap:break-word;}
 
 /* ── CAL CARD ── */
 .cal-total-card{background:var(--ink);border-radius:var(--radius-lg);padding:1.4rem;color:var(--cream);margin-bottom:1rem;}
@@ -172,6 +200,37 @@ input[type="range"]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;b
 .topping-kcal{font-family:var(--mono);font-size:11px;color:var(--muted);}
 .topping-qty-wrap{display:none;margin-top:6px;}
 .topping-item.selected .topping-qty-wrap{display:block;}
+
+/* ── PROTOCOL SECTIONS ── */
+.proto-section{margin-bottom:1.4rem;}
+.proto-section:last-child{margin-bottom:0;}
+.proto-section-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid var(--ink);}
+.proto-section-icon{font-size:18px;line-height:1;}
+.proto-section-title{font-family:var(--display);font-style:italic;font-size:15px;font-weight:700;color:var(--ink);}
+.proto-section-badge{margin-left:auto;font-size:10px;font-family:var(--mono);color:var(--accent);background:var(--accent-light);padding:2px 8px;border-radius:4px;font-weight:500;white-space:nowrap;}
+.proto-alert{background:var(--red-light);border-left:3px solid var(--red);border-radius:0 var(--radius) var(--radius) 0;padding:8px 12px;font-size:12px;color:var(--red);margin-bottom:10px;line-height:1.5;}
+.proto-alert strong{font-weight:600;}
+.proto-tip{background:var(--green-light);border-left:3px solid var(--green);border-radius:0 var(--radius) var(--radius) 0;padding:8px 12px;font-size:12px;color:var(--green);margin-top:8px;line-height:1.5;}
+.proto-timing{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+.proto-timing-pill{display:flex;align-items:center;gap:4px;background:var(--cream2);border:1px solid var(--border2);border-radius:20px;padding:4px 12px;font-size:11px;font-family:var(--mono);color:var(--ink);}
+.proto-timing-pill strong{color:var(--accent);}
+
+/* ── PATON PRESETS ── */
+.paton-preset{display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 6px;background:var(--cream);border:1.5px solid var(--border2);border-radius:var(--radius);cursor:pointer;transition:all .15s;font-family:var(--font);text-align:center;}
+.paton-preset:hover{border-color:var(--accent);}
+.paton-preset.active{background:var(--accent-light);border-color:var(--accent);}
+.preset-name{font-size:12px;font-weight:600;color:var(--ink);line-height:1.2;}
+.paton-preset.active .preset-name{color:var(--accent);}
+.preset-range{font-size:11px;font-family:var(--mono);color:var(--accent);font-weight:500;}
+.preset-desc{font-size:10px;color:var(--muted);line-height:1.3;}
+
+/* ── LEVURE TYPE BUTTONS ── */
+.lev-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 6px;background:var(--cream);border:1.5px solid var(--border2);border-radius:var(--radius);cursor:pointer;transition:all .15s;font-family:var(--font);}
+.lev-btn:hover{border-color:var(--accent);}
+.lev-btn.active{background:var(--accent-light);border-color:var(--accent);}
+.lev-btn-name{font-size:13px;font-weight:600;color:var(--ink);}
+.lev-btn-sub{font-size:10px;color:var(--muted);text-align:center;line-height:1.3;}
+.lev-btn.active .lev-btn-name{color:var(--accent);}
 
 /* ── MOBILE ── */
 @media(max-width:900px){
@@ -217,7 +276,7 @@ input[type="range"]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;b
 
   .result-val{font-size:20px;}
   .stat-val{font-size:16px;}
-  .steps-list li{font-size:14px;padding:12px 0;}
+  .steps-list li{font-size:13px;padding:12px 0;}
   .cal-total-val{font-size:28px;}
 }
 
@@ -242,7 +301,6 @@ input[type="range"]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;b
   <button class="bnb active" onclick="showPanel('impasto',this)"><span class="ni">🌾</span>Impasto</button>
   <button class="bnb" onclick="showPanel('protocole',this)"><span class="ni">📋</span>Protocole</button>
   <button class="bnb" onclick="showPanel('calories',this)"><span class="ni">🔥</span>Calories</button>
-  <button class="bnb" onclick="showPanel('garnitures',this)"><span class="ni">🍕</span>Garnitures</button>
   <button class="bnb" onclick="showPanel('suivi',this)"><span class="ni">📊</span>Suivi</button>
 </nav>
 
@@ -319,14 +377,59 @@ input[type="range"]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;b
             <input type="number" id="inp-paton-g" value="280" min="150" max="600" step="5" oninput="calc()">
             <div class="field-unit">g</div>
           </div>
+
+          <!-- PRESETS STYLE PIZZA -->
+          <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-top:10px;">
+            <button class="paton-preset" onclick="setPatonPreset(215, this)" data-min="200" data-max="230">
+              <span class="preset-name">🏛️ Romaine</span>
+              <span class="preset-range">200–230g</span>
+              <span class="preset-desc">fine & croustillante</span>
+            </button>
+            <button class="paton-preset" onclick="setPatonPreset(245, this)" data-min="230" data-max="260">
+              <span class="preset-name">🍕 Napolitaine</span>
+              <span class="preset-range">230–260g</span>
+              <span class="preset-desc">souple, cornicione</span>
+            </button>
+            <button class="paton-preset active" onclick="setPatonPreset(280, this)" data-min="260" data-max="300">
+              <span class="preset-name">🔥 Contemporaine</span>
+              <span class="preset-range">260–300g</span>
+              <span class="preset-desc">alvéolée, légère</span>
+            </button>
+          </div>
+          <div id="paton-style-tip" style="margin-top:8px; font-size:11px; color:var(--green); background:var(--green-light); border-left:3px solid var(--green); padding:6px 10px; border-radius:0 6px 6px 0; line-height:1.5;"></div>
+        </div>
+
+        <!-- TYPE DE LEVURE / LEVAIN -->
+        <div class="field-group">
+          <div class="field-label">
+            <span class="field-label-text">Type de levure / levain</span>
+          </div>
+          <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px;">
+            <button class="lev-btn" data-type="seche" onclick="onLevTypeChange('seche',this)">
+              <span style="font-size:16px;">🧂</span>
+              <span class="lev-btn-name">Sèche</span>
+              <span class="lev-btn-sub">active instantanée</span>
+            </button>
+            <button class="lev-btn" data-type="fraiche" onclick="onLevTypeChange('fraiche',this)">
+              <span style="font-size:16px;">🧊</span>
+              <span class="lev-btn-name">Fraîche</span>
+              <span class="lev-btn-sub">cube réfrigéré</span>
+            </button>
+            <button class="lev-btn active" data-type="levain" onclick="onLevTypeChange('levain',this)">
+              <span style="font-size:16px;">🫙</span>
+              <span class="lev-btn-name">Levain</span>
+              <span class="lev-btn-sub">naturel 50/50</span>
+            </button>
+          </div>
+          <div id="lev-type-note" style="margin-top:8px; font-size:11px; color:var(--accent); font-family:var(--mono); background:var(--accent-light); padding:5px 10px; border-radius:6px;"></div>
         </div>
 
         <div class="field-group">
           <div class="field-label">
             <span class="field-label-text">Fermentation à froid</span>
-            <span class="field-label-note" id="lbl-ferm">24h → levure 0.10%</span>
+            <span class="field-label-note" id="lbl-ferm">24h</span>
           </div>
-          <div style="display:flex; gap:6px;">
+          <div class="ferm-btns">
             <button class="ferm-btn active" data-h="24" onclick="onFermChange(24)">24h</button>
             <button class="ferm-btn" data-h="48" onclick="onFermChange(48)">48h</button>
             <button class="ferm-btn" data-h="72" onclick="onFermChange(72)">72h</button>
@@ -356,9 +459,9 @@ input[type="range"]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;b
           </div>
 
           <div class="result-block">
-            <div class="result-label">Levure sèche</div>
+            <div class="result-label" id="r-lev-label">Levain naturel</div>
             <div class="result-val"><span id="r-levure">—</span><span class="result-unit">g</span></div>
-            <div class="result-pct" id="r-lev-pct">0.10% — 24h</div>
+            <div class="result-pct" id="r-lev-pct">20% — 24h</div>
           </div>
 
         </div>
@@ -387,27 +490,13 @@ input[type="range"]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;b
   </div>
 
   <div class="panel" id="panel-protocole">
-<!-- RECETTE -->
     <div class="card" id="panel-protocole-card">
       <div class="card-header">
         <span class="card-header-icon">📋</span>
         <span class="card-header-title">Protocole</span>
-        <span class="card-header-note" id="proto-note">Fermentation 24h à froid</span>
+        <span class="card-header-note" id="proto-note">—</span>
       </div>
-      <div class="card-body">
-        <ul class="steps-list" id="steps-list">
-          <li><strong>Réhydrater la levure sèche :</strong> mélanger la levure dans 30–40 ml d'eau tiède (35–38°C) prélevée sur le total. Laisser reposer 5–10 min jusqu'à apparition de mousse. Ne jamais dépasser 40°C — la levure mourrait.</li>
-          <li><strong>Dissoudre le sel</strong> dans le reste de l'eau froide. Réserver environ 10 % de cette eau pour la fin du pétrissage.</li>
-          <li><strong>Incorporer la farine</strong> dans l'eau salée progressivement, en mélangeant jusqu'à absorption complète. Éviter les grumeaux secs.</li>
-          <li><strong>Ajouter la levure réhydratée</strong> et incorporer en filet les 10 % d'eau restants. La pâte doit être homogène avant d'ajouter plus d'eau.</li>
-          <li><strong>Pétrir 20 min à la main</strong> (ou 10 min au pétrin vitesse lente) jusqu'à obtenir une pâte lisse, élastique et non collante. Test du voile : étirer un bout de pâte — elle doit devenir translucide sans se déchirer.</li>
-          <li><strong>Pointage :</strong> couvrir d'un linge humide ou filmer au contact. Laisser reposer <span id="proto-pointage">1h</span> à température ambiante (20–22°C).</li>
-          <li><strong>Boulage :</strong> diviser en patons, former des boules tendues en pinçant vers le bas. Placer dans des boîtes hermétiques légèrement huilées, bien espacées.</li>
-          <li><strong>Fermentation à froid :</strong> placer au réfrigérateur (4°C) pendant <span id="proto-ferm-h">24h</span>. La fermentation lente développe arômes et alvéolage. Ne pas ouvrir les boîtes pendant cette période.</li>
-          <li><strong>Avant cuisson :</strong> sortir les patons <span id="proto-sortir">2h</span> avant utilisation. Les laisser revenir à température ambiante, couverts. Ne jamais étaler une pâte froide — elle se rétracte.</li>
-          <li><strong>Étalage :</strong> travailler à la main sur un plan fariné en partant du centre vers l'extérieur. Ne jamais utiliser de rouleau — il chasse les bulles de gaz.</li>
-        </ul>
-      </div>
+      <div class="card-body" id="proto-body"></div>
     </div>
   </div>
 
@@ -447,35 +536,24 @@ input[type="range"]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;b
           <ul class="selected-list" id="selected-list"></ul>
         </div>
 
-        <div style="margin-top:1.2rem;">
-          <button onclick="enregistrerPizza()" style="width:100%; padding:11px; background:var(--ink); border:none; border-radius:var(--radius); color:var(--cream); font-family:var(--font); font-size:14px; font-weight:600; cursor:pointer; letter-spacing:0.02em; transition:opacity .15s;" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
-            🍕 Enregistrer cette pizza
-          </button>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <div class="panel" id="panel-garnitures">
-<!-- GARNITURES -->
-    <div class="card">
-      <div class="card-header">
-        <span class="card-header-icon">🍕</span>
-        <span class="card-header-title">Garnitures</span>
-        <span class="card-header-note">sélectionner + ajuster</span>
-      </div>
-      <div class="card-body">
+        <!-- GARNITURES INLINE -->
+        <div class="section-sep"><span>Garnitures</span></div>
 
         <div class="tab-bar">
           <button class="tab-btn active" onclick="filterTopping('all', this)">Tout</button>
           <button class="tab-btn" onclick="filterTopping('base', this)">Bases</button>
-          <button class="tab-btn" onclick="filterTopping('charcuterie', this)">Charcut.</button>
+          <button class="tab-btn" onclick="filterTopping('charcuterie', this)">Charcuterie</button>
           <button class="tab-btn" onclick="filterTopping('fromage', this)">Fromages</button>
           <button class="tab-btn" onclick="filterTopping('legume', this)">Légumes</button>
         </div>
 
         <div class="garnitures-grid" id="topping-grid"></div>
+
+        <div style="margin-top:1rem;">
+          <button onclick="enregistrerPizza()" style="width:100%; padding:13px; background:var(--ink); border:none; border-radius:var(--radius); color:var(--cream); font-family:var(--font); font-size:14px; font-weight:600; cursor:pointer; letter-spacing:0.02em; transition:opacity .15s;" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+            🍕 Enregistrer cette pizza
+          </button>
+        </div>
 
       </div>
     </div>
@@ -581,7 +659,10 @@ const TOPPINGS = [
   { id:'mozz-rape', name:'Mozzarella râpée', cat:'fromage', emoji:'🧀', kcal100:280, prot100:20, carb100:2, fat100:22, defaultG:80 },
   { id:'fior', name:'Fior di latte', cat:'fromage', emoji:'🥛', kcal100:242, prot100:18, carb100:2.7, fat100:18, defaultG:80 },
   { id:'fromageb', name:'Fromage blanc', cat:'fromage', emoji:'🍶', kcal100:77, prot100:11, carb100:3.5, fat100:3, defaultG:80 },
-  { id:'creme', name:'Crème 30%', cat:'fromage', emoji:'🥛', kcal100:292, prot100:2.5, carb100:3, fat100:30, defaultG:50 },
+  { id:'creme', name:'Crème fraîche 30%', cat:'fromage', emoji:'🥛', kcal100:292, prot100:2.5, carb100:3, fat100:30, defaultG:50 },
+  { id:'creme-base', name:'Base crème (sauce)', cat:'base', emoji:'🤍', kcal100:257, prot100:2.2, carb100:3.5, fat100:26, defaultG:80, brand:'Crème liquide entière 35%' },
+  { id:'oeuf-entier', name:'Œuf entier (1)', cat:'base', emoji:'🥚', kcal100:143, prot100:13, carb100:1, fat100:10, defaultG:55 },
+  { id:'oeuf-jaune', name:'Jaune d\'œuf (1)', cat:'base', emoji:'🥚', kcal100:322, prot100:16, carb100:1, fat100:27, defaultG:18 },
   { id:'ricotta', name:'Ricotta', cat:'fromage', emoji:'🧀', kcal100:174, prot100:11, carb100:3, fat100:13, defaultG:60 },
   { id:'gorgon', name:'Gorgonzola', cat:'fromage', emoji:'🧀', kcal100:362, prot100:21, carb100:1, fat100:31, defaultG:40 },
   { id:'parmes', name:'Parmesan râpé', cat:'fromage', emoji:'🧀', kcal100:431, prot100:38, carb100:3, fat100:29, defaultG:20 },
@@ -604,38 +685,69 @@ const TOPPINGS = [
 ];
 
 // ======= CONSTANTS napolitaine contemporaine =======
-const SEL_PCT   = 0.028;   // 2.8% du poids de farine
-// Levure sèche selon durée fermentation à froid :
-// 24h → 0.10% / 48h → 0.05% / 72h → 0.03%
-const LEV_BY_FERM = { 24: 0.001, 48: 0.0005, 72: 0.0003 };
-const CIRC      = 2 * Math.PI * 42; // 263.9
+const SEL_PCT = 0.028; // 2.8% fixe
+
+// % par type de levure/levain et durée fermentation
+// Levure SÈCHE  : 24h→0.10% / 48h→0.05% / 72h→0.03%
+// Levure FRAÎCHE: ×3 vs sèche → 24h→0.30% / 48h→0.15% / 72h→0.10%
+// LEVAIN naturel: 24h→20% / 48h→15% / 72h→10% de la farine (50% farine / 50% eau)
+const LEV_TABLE = {
+  seche:  { 24: 0.0010, 48: 0.0005, 72: 0.0003 },
+  fraiche:{ 24: 0.0030, 48: 0.0015, 72: 0.0010 },
+  levain: { 24: 0.20,   48: 0.15,   72: 0.10   }, // % de la farine selon durée
+};
+// Le levain est hydraté à 100% → il apporte de l'eau et de la farine
+// levain = farine_levain + eau_levain, farine_levain = levain/2, eau_levain = levain/2
+// On soustrait l'eau du levain de l'eau totale
+
+const LEV_LABELS  = { seche:'Levure sèche', fraiche:'Levure fraîche', levain:'Levain naturel' };
+const LEV_NOTES   = {
+  seche:  '✦ Active instantanée — dissoudre dans l\'eau tiède avant usage',
+  fraiche:'✦ Cube réfrigéré — 3× plus que la sèche, conservation 2–3 semaines',
+  levain: '✦ Levain 50% farine / 50% eau — nourri 8–12h avant usage, au pic d\'activité',
+};
+
+const CIRC = 2 * Math.PI * 42;
 
 let state = {
-  hydro:   65,   // %
-  patonG:  280,  // g par paton (pâte crue)
+  hydro:   65,
+  patonG:  280,
   patons:  4,
-  ferm:    24,   // h — durée fermentation
+  ferm:    24,
+  levType: 'levain',
   toppings: {},
 };
 
 // ======= CORE CALC =======
-// Entrées : hydro (%), patonG (g), patons (n)
-// Poids total pâte = patonG × patons
-// Pâte = farine + eau + sel + levure
-// eau   = farine × hydro/100
-// sel   = farine × 2.8%
-// levure= farine × 0.3%
-// total = farine × (1 + hydro/100 + 0.028 + 0.003)
-// → farine = total / (1 + hydro/100 + 0.031)
-
 function computeRecette() {
-  const LEV_PCT  = LEV_BY_FERM[state.ferm] || 0.001;
+  const LEV_PCT  = LEV_TABLE[state.levType][state.ferm];
   const totalPate = state.patonG * state.patons;
-  const div = 1 + state.hydro / 100 + SEL_PCT + LEV_PCT;
-  const farine  = totalPate / div;
-  const eau     = farine * state.hydro / 100;
-  const sel     = farine * SEL_PCT;
-  const levure  = farine * LEV_PCT;
+
+  let farine, eau, sel, levure;
+
+  if (state.levType === 'levain') {
+    // Levain 100% hydratation = 50% farine + 50% eau
+    // levain = farine × LEV_PCT
+    // farine_levain = levain × 0.5
+    // eau_levain    = levain × 0.5
+    // eau_directe   = farine × hydro/100 - eau_levain
+    // total = farine + eau_directe + eau_levain + sel + levain
+    //       = farine + farine×hydro/100 + sel + levain
+    //       = farine × (1 + hydro/100 + SEL_PCT + LEV_PCT)
+    const div = 1 + state.hydro / 100 + SEL_PCT + LEV_PCT;
+    farine = totalPate / div;
+    levure = farine * LEV_PCT;                          // poids total levain
+    const eauLevain = levure * 0.5;                     // 50% eau dans le levain
+    eau = farine * state.hydro / 100 - eauLevain;       // eau directe (hors levain)
+    sel = farine * SEL_PCT;
+  } else {
+    const div = 1 + state.hydro / 100 + SEL_PCT + LEV_PCT;
+    farine = totalPate / div;
+    eau    = farine * state.hydro / 100;
+    sel    = farine * SEL_PCT;
+    levure = farine * LEV_PCT;
+  }
+
   return { farine, eau, sel, levure, totalPate, LEV_PCT };
 }
 
@@ -645,54 +757,396 @@ function calc() {
 
   const { farine, eau, sel, levure, totalPate, LEV_PCT } = computeRecette();
 
-  // Update circle & labels
   updateCircle(state.hydro);
-
-  // Sync number input with slider
   document.getElementById('inp-hydro').value = state.hydro;
   document.getElementById('lbl-hydro').textContent = state.hydro + '%';
 
   // Result blocks
-  document.getElementById('r-farine').textContent = Math.round(farine);
-  document.getElementById('r-eau').textContent    = Math.round(eau);
-  document.getElementById('r-sel').textContent    = sel.toFixed(1);
-  document.getElementById('r-levure').textContent = levure.toFixed(2);
-  document.getElementById('r-eau-pct').textContent = state.hydro + '%';
-  document.getElementById('r-lev-pct').textContent = (LEV_PCT * 100).toFixed(2) + '% — ' + state.ferm + 'h';
+  document.getElementById('r-farine').textContent  = Math.round(farine);
+  document.getElementById('r-eau').textContent      = Math.round(eau);
+  document.getElementById('r-sel').textContent      = sel.toFixed(1);
+  document.getElementById('r-levure').textContent   = levure.toFixed(state.levType === 'levain' ? 0 : 2);
+  document.getElementById('r-eau-pct').textContent  = state.hydro + '%';
+  document.getElementById('r-lev-label').textContent = LEV_LABELS[state.levType];
+
+  const pctDisplay = state.levType === 'levain'
+    ? (LEV_PCT * 100).toFixed(0) + '% farine · 50/50'
+    : (LEV_PCT * 100).toFixed(2) + '% — ' + state.ferm + 'h';
+  document.getElementById('r-lev-pct').textContent = pctDisplay;
 
   // Stats
   document.getElementById('stat-total-pate').textContent = Math.round(totalPate) + 'g';
-  document.getElementById('stat-nb-patons').textContent   = state.patons;
-  document.getElementById('stat-paton-reel').textContent  = Math.round(totalPate / state.patons) + 'g';
+  document.getElementById('stat-nb-patons').textContent  = state.patons;
+  document.getElementById('stat-paton-reel').textContent = Math.round(totalPate / state.patons) + 'g';
 
   // Tip
-  let tipDesc = '';
-  if (state.hydro < 62) tipDesc = 'Hydratation basse — pâte ferme, facile à étaler, cornicione plus dense.';
-  else if (state.hydro <= 68) tipDesc = 'Zone idéale napolitaine contemporaine ✓ — alvéolage généreux, bonne légèreté.';
-  else if (state.hydro <= 72) tipDesc = 'Haute hydratation — pâte collante, nécessite un pétrissage soigné et un plan de travail fariné.';
-  else tipDesc = 'Très haute hydratation — technique avancée requise. Préférer un bassinage progressif.';
+  let tipHydro = '';
+  if (state.hydro < 62) tipHydro = 'Hydratation basse — pâte ferme, cornicione plus dense.';
+  else if (state.hydro <= 68) tipHydro = 'Zone idéale napolitaine contemporaine ✓ — alvéolage généreux.';
+  else if (state.hydro <= 72) tipHydro = 'Haute hydratation — pétrissage soigné requis.';
+  else tipHydro = 'Très haute hydratation — technique avancée, bassinage recommandé.';
 
-  const fermTip = { 24: 'Sortir la pâte 2h avant utilisation.', 48: 'Optimum goût/alvéolage — sortir 3h avant.', 72: 'Saveurs maximales, pâte très extensible — sortir 4h avant.' };
+  const fermTip = {
+    24: 'Sortir 2h avant cuisson.',
+    48: 'Optimum goût/alvéolage — sortir 3h avant.',
+    72: 'Saveurs maximales — sortir 4h avant.',
+  };
+  const levTip = {
+    seche:   'Levure sèche active instantanée — ne pas dépasser 40°C lors de la réhydratation.',
+    fraiche: 'Levure fraîche — émietter directement dans l\'eau froide, ne pas dissoudre dans l\'eau chaude.',
+    levain:  'Levain 50% farine / 50% eau — l\'eau affichée est l\'eau directe (hors eau du levain). Utiliser au pic d\'activité.',
+  };
   document.getElementById('tip-box').innerHTML =
-    '<strong>Conseil :</strong> ' + tipDesc + ' ' + fermTip[state.ferm];
+    '<strong>Conseil :</strong> ' + tipHydro + ' ' + fermTip[state.ferm] + '<br><em>' + levTip[state.levType] + '</em>';
 
+  updateProtocole();
   updateCalories();
+  updatePatonTip();
+}
+
+// Hydratation recommandée par style (valeur centrale de chaque zone)
+const HYDRO_FOR_STYLE = { romaine: 58, napolitaine: 63, contemporaine: 68 };
+// Zone hydratation → style de pizza
+function hydroToStyle(h) {
+  if (h < 60) return 'romaine';
+  if (h < 65) return 'napolitaine';
+  if (h <= 72) return 'contemporaine';
+  return null; // expert, aucun preset
+}
+
+function syncPresetFromHydro(h) {
+  const style = hydroToStyle(h);
+  document.querySelectorAll('.paton-preset').forEach(b => {
+    // Le dataset.style n'existe pas encore — on détermine via le texte du bouton
+    const name = b.querySelector('.preset-name').textContent.toLowerCase();
+    const match = style === 'romaine' && name.includes('romaine')
+                || style === 'napolitaine' && name.includes('napolitaine')
+                || style === 'contemporaine' && name.includes('contemporaine');
+    b.classList.toggle('active', match);
+  });
+}
+
+function setPatonPreset(g, btn) {
+  // Déterminer le style depuis le bouton cliqué
+  const name = btn.querySelector('.preset-name').textContent.toLowerCase();
+  let style = 'contemporaine';
+  if (name.includes('romaine')) style = 'romaine';
+  else if (name.includes('napolitaine')) style = 'napolitaine';
+
+  // Mettre à jour le poids paton
+  document.getElementById('inp-paton-g').value = g;
+
+  // Mettre à jour l'hydratation vers la valeur centrale du style
+  const h = HYDRO_FOR_STYLE[style];
+  state.hydro = h;
+  document.getElementById('slider-hydro').value = h;
+  document.getElementById('inp-hydro').value = h;
+
+  // Activer le bon bouton preset
+  document.querySelectorAll('.paton-preset').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  calc();
+}
+
+const PATON_TIPS = {
+  romaine: {
+    range: [200, 230],
+    tip: '🏛️ <strong>Pizza Romaine 30 cm</strong> — base très fine et croustillante (scrocchiarella). Étaler au rouleau jusqu\'à 2–3 mm. Cuisson au four électrique 300–320°C, 4–5 min. Hydratation idéale 55–62%.',
+  },
+  napolitaine: {
+    range: [230, 260],
+    tip: '🍕 <strong>Pizza Napolitaine 30 cm</strong> — disque souple avec cornicione gonflé. Étalage exclusivement à la main. Cuisson au four à bois 450–500°C, 60–90 secondes. Centre fin, bord épais.',
+  },
+  contemporaine: {
+    range: [260, 300],
+    tip: '🔥 <strong>Napolitaine Contemporaine 30 cm</strong> — ton format. Cornicione très alvéolé et aérien. Hydratation 65–72%, longue fermentation. Four napolitain ou Ooni 430–470°C, 90 sec à 2 min.',
+  },
+};
+
+function updatePatonTip() {
+  const g = parseFloat(document.getElementById('inp-paton-g').value) || 280;
+  const tipEl = document.getElementById('paton-style-tip');
+  if (!tipEl) return;
+
+  let matched = null;
+  let matchedBtn = null;
+
+  for (const [style, data] of Object.entries(PATON_TIPS)) {
+    if (g >= data.range[0] && g <= data.range[1]) {
+      matched = data.tip;
+      // Highlight matching preset button
+      document.querySelectorAll('.paton-preset').forEach(b => {
+        const min = parseInt(b.dataset.min);
+        const max = parseInt(b.dataset.max);
+        const isMatch = g >= min && g <= max;
+        b.classList.toggle('active', isMatch);
+      });
+      break;
+    }
+  }
+
+  if (matched) {
+    tipEl.innerHTML = matched;
+    tipEl.style.display = 'block';
+  } else if (g < 200) {
+    tipEl.innerHTML = '⚠️ Moins de 200g pour 30 cm — pâte trop fine, difficile à manipuler sans déchirer.';
+    tipEl.style.display = 'block';
+    document.querySelectorAll('.paton-preset').forEach(b => b.classList.remove('active'));
+  } else if (g > 300) {
+    tipEl.innerHTML = '📐 Plus de 300g — pâte épaisse style teglia ou pizza al taglio. Cuisson en plaque 250°C, 12–15 min.';
+    tipEl.style.display = 'block';
+    document.querySelectorAll('.paton-preset').forEach(b => b.classList.remove('active'));
+  } else {
+    tipEl.style.display = 'none';
+  }
+}
+
+function onLevTypeChange(type, btn) {
+  state.levType = type;
+  document.querySelectorAll('.lev-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('lev-type-note').textContent = LEV_NOTES[type];
+  // Levain ne dépend pas de la durée pour le % mais on garde le choix durée actif
+  calc();
+  updateFermLabel();
 }
 
 function onFermChange(h) {
   state.ferm = parseInt(h);
-  const levPctMap  = { 24: '0.10%', 48: '0.05%', 72: '0.03%' };
-  const pointageMap = { 24: '1h', 48: '1h30', 72: '2h' };
-  const sortirMap  = { 24: '2h', 48: '3h', 72: '4h' };
-  document.getElementById('lbl-ferm').textContent = h + 'h → levure ' + levPctMap[h];
-  document.getElementById('proto-note').textContent = 'Fermentation ' + h + 'h à froid';
-  document.getElementById('proto-ferm-h').textContent = h + 'h';
-  document.getElementById('proto-pointage').textContent = pointageMap[h];
-  document.getElementById('proto-sortir').textContent = sortirMap[h];
   document.querySelectorAll('.ferm-btn').forEach(b => {
     b.classList.toggle('active', parseInt(b.dataset.h) === state.ferm);
   });
+  updateFermLabel();
   calc();
+}
+
+function updateFermLabel() {
+  const pct = LEV_TABLE[state.levType][state.ferm];
+  const lbl = state.levType === 'levain'
+    ? state.ferm + 'h — levain ' + (pct * 100).toFixed(0) + '%'
+    : state.ferm + 'h → ' + (pct * 100).toFixed(2) + '%';
+  document.getElementById('lbl-ferm').textContent = lbl;
+  if (document.getElementById('proto-note'))
+    document.getElementById('proto-note').textContent = LEV_LABELS[state.levType] + ' — ' + state.ferm + 'h';
+}
+
+// ======= PROTOCOLE DYNAMIQUE =======
+function getPizzaStyle() {
+  const g = state.patonG;
+  if (g <= 230) return 'romaine';
+  if (g <= 260) return 'napolitaine';
+  return 'contemporaine';
+}
+
+function updateProtocole() {
+  const body = document.getElementById('proto-body');
+  if (!body) return;
+
+  const style    = getPizzaStyle();
+  const levType  = state.levType;
+  const ferm     = state.ferm;
+  const hydro    = state.hydro;
+  const patonG   = Math.round(state.patonG);
+
+  // Dynamic timings
+  const pointage = { 24:'1h', 48:'1h30', 72:'2h' }[ferm];
+  const sortir   = { 24:'2h', 48:'3h',   72:'4h' }[ferm];
+
+  // Style-specific params
+  const styleParams = {
+    romaine:       { four:'330°C', cuisson:'5–7 min', etalage:'rouleau ou mains', hydro:'55–62%', epaisseur:'2–3 mm (uniforme)' },
+    napolitaine:   { four:'370°C', cuisson:'3 min', etalage:'mains uniquement', hydro:'62–67%', epaisseur:'3–4 mm (centre), 1,5 cm (cornicione)' },
+    contemporaine: { four:'370°C', cuisson:'3 min', etalage:'mains uniquement', hydro:'65–72%', epaisseur:'3 mm (centre), 2–3 cm (cornicione)' },
+  };
+  const sp = styleParams[style];
+
+  const styleLabels = { romaine:'🏛️ Romaine', napolitaine:'🍕 Napolitaine', contemporaine:'🔥 Contemporaine' };
+  const levLabels   = { seche:'Levure sèche', fraiche:'Levure fraîche', levain:'Levain naturel' };
+
+  // Update header note
+  if (document.getElementById('proto-note'))
+    document.getElementById('proto-note').textContent = styleLabels[style] + ' · ' + levLabels[levType] + ' · ' + ferm + 'h';
+
+  // ── SECTION BUILDER ──
+  function section(icon, title, badge, content) {
+    return `<div class="proto-section">
+      <div class="proto-section-header">
+        <span class="proto-section-icon">${icon}</span>
+        <span class="proto-section-title">${title}</span>
+        ${badge ? `<span class="proto-section-badge">${badge}</span>` : ''}
+      </div>
+      ${content}
+    </div>`;
+  }
+
+  function steps(arr) {
+    return '<ul class="steps-list">' + arr.map(s => `<li><span>${s}</span></li>`).join('') + '</ul>';
+  }
+
+  function alert(txt) { return `<div class="proto-alert">${txt}</div>`; }
+  function tip(txt)   { return `<div class="proto-tip">${txt}</div>`; }
+
+  function timings(...pills) {
+    return '<div class="proto-timing">' + pills.map(([label, val]) =>
+      `<div class="proto-timing-pill">${label} <strong>${val}</strong></div>`
+    ).join('') + '</div>';
+  }
+
+  // ── 0. RÉSUMÉ DE SÉANCE ──
+  const resume = section('📐', 'Fiche de séance', patonG + 'g × ' + state.patons + ' patons',
+    timings(
+      ['Style', styleLabels[style]],
+      ['Levure', levLabels[levType]],
+      ['Hydratation', hydro + '%'],
+      ['Fermentation', ferm + 'h à froid'],
+      ['Four', sp.four],
+      ['Cuisson', sp.cuisson],
+    )
+  );
+
+  // ── 1. PRÉPARATION LEVURE / LEVAIN ──
+  let levSection = '';
+  if (levType === 'seche') {
+    levSection = section('🧂', 'Levure sèche', '15 min avant pétrissage',
+      steps([
+        '<strong>Mesurer</strong> 30–40 ml d\'eau tiède (35–38°C) prélevée sur le total de la recette.',
+        '<strong>Verser la levure sèche</strong> dans l\'eau tiède. Ne jamais dépasser 40°C — la levure mourrait.',
+        '<strong>Attendre 5–10 min</strong> jusqu\'à formation d\'une mousse en surface. Si pas de mousse, la levure est morte — recommencer.',
+      ]) + alert('⚠️ Le sel tue la levure. Ne jamais les mélanger directement.')
+    );
+  } else if (levType === 'fraiche') {
+    levSection = section('🧊', 'Levure fraîche', 'Au moment du pétrissage',
+      steps([
+        '<strong>Sortir la levure fraîche</strong> du réfrigérateur 30 min avant. Elle s\'active mieux à température ambiante.',
+        '<strong>Émietter finement</strong> la levure directement dans l\'eau froide ou tempérée (max 25°C). Ne jamais utiliser d\'eau chaude.',
+        '<strong>Mélanger doucement</strong> jusqu\'à dissolution complète.',
+      ]) + alert('⚠️ Jamais de contact direct sel-levure. Toujours les dissoudre séparément.')
+      + tip('✦ La levure fraîche est 3× plus puissante en volume que la sèche. Elle donne un arôme légèrement plus lacté.')
+    );
+  } else {
+    const levPct = Math.round(LEV_TABLE.levain[ferm] * 100);
+    levSection = section('🫙', 'Levain naturel', 'Nourrir 8–12h avant',
+      steps([
+        '<strong>J-1 matin :</strong> nourrir le levain au ratio 1:2:2 (1 levain, 2 farine, 2 eau tiède). Laisser à 24–26°C.',
+        '<strong>J-1 soir :</strong> second rafraîchi 1:1:1. Le levain double en 4–6h — c\'est bon signe.',
+        '<strong>Test du pic :</strong> le levain doit être bombé, bulleux, avec une odeur yogourt légèrement acidulée. Test flottaison : une noisette doit flotter dans l\'eau froide.',
+        `<strong>Prélever ${levPct}% du poids de farine</strong> (déjà calculé dans la recette). Le reste est votre chef à conserver.`,
+      ]) + alert('⚠️ Un levain utilisé après son pic donne une pâte trop acide et un gluten dégradé.')
+      + tip('✦ Température eau directe : en été 14–16°C, en hiver 20–22°C. Viser une pâte finale à 23–25°C.')
+    );
+  }
+
+  // ── 2. PÉTRISSAGE ──
+  let petrissageContent = '';
+  if (levType === 'levain') {
+    petrissageContent = steps([
+      '<strong>Dissoudre le sel</strong> dans l\'eau directe (voir recette — l\'eau du levain est déjà comptée dans le levain). Réserver 10% de cette eau.',
+      '<strong>Autolyse (optionnel mais recommandé) :</strong> mélanger farine + eau directe sans sel ni levain. Reposer 20–30 min. Améliore l\'extensibilité et réduit le pétrissage.',
+      '<strong>Incorporer le levain</strong> et le sel. Mélanger jusqu\'à homogénéité.',
+      '<strong>Ajouter les 10% d\'eau restants</strong> en filet (bassinage). La pâte doit absorber complètement avant d\'en rajouter.',
+      '<strong>Pétrir 15–20 min à la main</strong> ou 10 min au pétrin vitesse lente. La pâte au levain est plus collante — normal.',
+      '<strong>Test du voile :</strong> étirer un morceau de pâte — elle doit devenir translucide sans se déchirer. Gluten bien développé.',
+    ]) + tip('✦ Ne pas trop pétrir — le levain continue de développer le gluten pendant la fermentation.');
+  } else {
+    petrissageContent = steps([
+      '<strong>Dissoudre le sel</strong> dans l\'eau froide. Réserver 10% pour la fin.',
+      '<strong>Incorporer la farine</strong> progressivement en mélangeant jusqu\'à absorption complète. Éviter les grumeaux secs.',
+      levType === 'seche'
+        ? '<strong>Ajouter la levure réhydratée</strong> puis les 10% d\'eau restants en filet.'
+        : '<strong>Ajouter l\'eau levurée</strong> puis les 10% restants en filet.',
+      '<strong>Pétrir 20 min à la main</strong> (ou 10 min au pétrin vitesse lente) jusqu\'à obtenir une pâte lisse, élastique, non collante.',
+      '<strong>Test du voile :</strong> la pâte doit s\'étirer en film translucide sans se déchirer.',
+    ]);
+  }
+  const petrissage = section('💪', 'Pétrissage', levType === 'levain' ? 'avec autolyse' : '20 min', petrissageContent);
+
+  // ── 3. POINTAGE ──
+  const pointageContent = steps([
+    '<strong>Former une boule</strong> et couvrir d\'un linge humide ou filmer au contact.',
+    `<strong>Laisser reposer ${pointage}</strong> à température ambiante (20–22°C). La pâte doit gonfler de 30–50%.`,
+    '<strong>Ne pas dégazer</strong> — les bulles de CO₂ sont déjà au travail.',
+  ]) + (levType === 'levain' ? tip('✦ Le levain fermente plus lentement que la levure commerciale. Ne pas s\'inquiéter si la pousse semble lente en début de pointage.') : '');
+  const pointageSection = section('⏱️', 'Pointage', pointage + ' à température ambiante', pointageContent);
+
+  // ── 4. BOULAGE ──
+  let boulageContent = '';
+  if (style === 'romaine') {
+    boulageContent = steps([
+      '<strong>Diviser en patons</strong> de ' + patonG + 'g chacun.',
+      '<strong>Bouler en serrant bien</strong> — la pizza romaine nécessite une tension de surface forte pour tenir à l\'étalage au rouleau.',
+      '<strong>Placer dans des boîtes hermétiques</strong> légèrement huilées, bien espacés.',
+    ]);
+  } else {
+    boulageContent = steps([
+      '<strong>Diviser en patons</strong> de ' + patonG + 'g chacun. Peser pour être précis.',
+      '<strong>Bouler en pinçant vers le bas</strong> — créer une tension de surface sans dégazer. La clé est sous la boule.',
+      '<strong>Placer dans des boîtes hermétiques huilées</strong> bien espacés — ils vont encore gonfler.',
+    ]) + tip('✦ Une belle boule bien tendue = un cornicione bien développé. Ne pas sauter cette étape.');
+  }
+  const boulage = section('⚽', 'Boulage', patonG + 'g par paton', boulageContent);
+
+  // ── 5. FERMENTATION À FROID ──
+  const fermContent = steps([
+    `<strong>Placer au réfrigérateur à 4°C</strong> pendant ${ferm}h. Ne pas ouvrir les boîtes — les chocs thermiques perturbent la fermentation.`,
+    levType === 'levain'
+      ? `<strong>Le levain fermente lentement au froid :</strong> une augmentation de 50–70% de volume après ${ferm}h est normale.`
+      : `<strong>Vérifier à mi-parcours :</strong> les patons doivent avoir gonflé de 30–50%. S'ils ont doublé, ils sont prêts — sortir plus tôt.`,
+    '<strong>Signal de réussite :</strong> en sortant les boîtes, appuyer du doigt — la pâte remonte lentement. Si instantané = sous-fermenté. Si elle ne revient pas = sur-fermenté.',
+  ]) + timings(['Durée', ferm + 'h'], ['Température', '4°C'], ['Sortir avant cuisson', sortir]);
+  const fermSection = section('❄️', 'Fermentation à froid', ferm + 'h à 4°C', fermContent);
+
+  // ── 6. ÉTALAGE ──
+  let etalageContent = '';
+  if (style === 'romaine') {
+    etalageContent = steps([
+      `<strong>Sortir les patons ${sortir} avant cuisson.</strong> Laisser revenir à température ambiante, couverts.`,
+      '<strong>Fariner généreusement</strong> le plan de travail et la pâte.',
+      '<strong>Étaler au rouleau</strong> de l\'intérieur vers l\'extérieur jusqu\'à 2–3 mm d\'épaisseur. La romaine est fine et uniforme — pas de bord épais.',
+      '<strong>Piquer la pâte</strong> à la fourchette pour éviter les cloques à la cuisson.',
+    ]) + tip('✦ La romaine tolère le rouleau contrairement à la napolitaine — c\'est même recommandé pour obtenir une épaisseur uniforme.');
+  } else {
+    etalageContent = steps([
+      `<strong>Sortir les patons ${sortir} avant cuisson.</strong> Jamais d\'une pâte froide — elle se rétracte.`,
+      '<strong>Fariner le plan de travail</strong> (semoule fine + farine T00).',
+      '<strong>Placer le paton côté lisse vers le bas.</strong> Appuyer au centre avec les doigts en tournant pour former le disque.',
+      '<strong>Étirer à la main</strong> en faisant tourner la pâte — jamais de rouleau, il chasse les bulles.',
+      style === 'contemporaine'
+        ? '<strong>Viser 30 cm</strong> avec un centre à 3 mm et un cornicione épais de 2–3 cm. Laisser les bulles d\'air dans le bord.'
+        : '<strong>Viser 30 cm</strong> avec un centre très fin (3–4 mm) et un cornicione de 1–2 cm.',
+    ]) + alert('🚫 Jamais de rouleau sur une napolitaine — il écrase l\'alvéolage et tue le cornicione.');
+  }
+  const etalage = section('🤌', 'Étalage', sp.etalage, etalageContent);
+
+  // ── 7. CUISSON ──
+  let cuissonContent = '';
+  const ovenNote = '<div class="proto-tip" style="margin-bottom:10px;">✦ <strong>Ton four monte à 370°C</strong> — utilise une pierre à pizza ou un acier de cuisson préchauffé au moins 1h. Indispensable pour une sole croustillante.</div>';
+
+  if (style === 'romaine') {
+    cuissonContent = ovenNote + steps([
+      '<strong>Préchauffer four + pierre à 330°C</strong> pendant minimum 45–60 min. La pierre doit être à saturation thermique.',
+      '<strong>Garnir la pâte étalée</strong> sur la pelle farinée (semoule fine). Travailler rapidement — la pâte fine sèche vite.',
+      '<strong>Enfourner directement sur la pierre.</strong> Cuisson 5–7 min — surveiller le dessous en soulevant à mi-parcours avec la pelle.',
+      '<strong>La pizza est prête</strong> quand la base est uniformément dorée et croustillante, bords légèrement colorés.',
+    ]) + tip('✦ La romaine se vérifie par le son — elle doit sonner creux sous la pelle. Si elle fléchit encore, 1–2 min de plus.');
+  } else if (style === 'napolitaine') {
+    cuissonContent = ovenNote + steps([
+      '<strong>Préchauffer à 370°C max</strong> avec la pierre, minimum 1h. Vérifier la température de la pierre au thermomètre infrarouge.',
+      '<strong>Garnir rapidement sur la pelle</strong> : sauce → fromage → garnitures. Ne pas laisser poser — la pâte humidifie.',
+      '<strong>Enfourner sur la pierre.</strong> Cuisson 3 min — retourner la pizza d\'un demi-tour à 1 min 30 pour uniformiser.',
+      '<strong>La pizza est prête</strong> quand le cornicione est gonflé et coloré, le fond doré sans être brûlé.',
+    ]) + alert('⚠️ À 370°C le léopardage sera limité vs four à bois — c\'est normal. Le résultat reste excellent.');
+  } else {
+    cuissonContent = ovenNote + steps([
+      '<strong>Préchauffer à 370°C</strong> avec pierre ou acier, minimum 1h. L\'acier chauffe plus vite et donne une sole plus croustillante.',
+      '<strong>Garnir rapidement sur la pelle</strong> — la pâte contemporaine à haute hydratation absorbe vite l\'humidité de la sauce.',
+      '<strong>Enfourner sur la pierre.</strong> Cuisson 3 min. Tourner d\'un demi-tour à 1 min 30 pour uniformiser la coloration.',
+      '<strong>Le cornicione doit être bien gonflé</strong> et doré avec quelques cloques. Le centre reste souple — jamais sec.',
+    ]) + tip('✦ Avec un acier de cuisson à 370°C, la contemporaine donne d\'excellents résultats. Le cornicione gonfle bien grâce à la haute hydratation.');
+  }
+  const cuisson = section('🔥', 'Cuisson', sp.four + ' · ' + sp.cuisson, cuissonContent);
+
+  body.innerHTML = resume + levSection + petrissage + pointageSection + boulage + fermSection + etalage + cuisson;
 }
 
 // ======= CIRCLE =======
@@ -701,7 +1155,6 @@ function updateCircle(h) {
   const offset = CIRC * (1 - pct);
   const arc    = document.getElementById('hydro-arc');
   arc.style.strokeDashoffset = offset.toFixed(1);
-  arc.style.stroke = h < 62 ? '#2D6A4F' : h > 73 ? '#C0392B' : '#C8873A';
 
   document.getElementById('hydro-pct').textContent = h + '%';
 
@@ -709,16 +1162,20 @@ function updateCircle(h) {
   const sliderPct = ((h - 55) / 25 * 100).toFixed(1);
   document.getElementById('slider-hydro').style.setProperty('--pct', sliderPct + '%');
 
-  // style description
+  // style description — 4 zones
   let style, desc, range;
-  if (h < 62) {
-    style = 'Ferme'; desc = 'Pâte compacte, facile à étaler. Cornicione moins gonflé.'; range = '55–62 % — Traditionnelle';
-  } else if (h <= 68) {
-    style = 'Contemporaine'; desc = 'Équilibre parfait extensibilité / structure. Alvéoles généreuses, cornicione gonflé.'; range = '62–68 % — Recommandé ★';
-  } else if (h <= 73) {
-    style = 'Haute hydratation'; desc = 'Pâte souple et légère. Demande une bonne maîtrise du pétrissage.'; range = '68–73 % — Avancé';
+  if (h < 60) {
+    style = 'Romaine'; desc = 'Idéale pour la pizza romaine (scrocchiarella). Pâte ferme, croustillante, étalage au rouleau.'; range = '55–60 % — Romaine';
+    arc.style.stroke = '#2D6A4F';
+  } else if (h < 65) {
+    style = 'Napolitaine'; desc = 'Zone de la napolitaine classique STG. Bonne extensibilité, cornicione souple et léger.'; range = '60–65 % — Napolitaine';
+    arc.style.stroke = '#C8873A';
+  } else if (h <= 72) {
+    style = 'Contemporaine ★'; desc = 'Ta zone. Équilibre parfait extensibilité / structure. Alvéoles généreuses, cornicione gonflé et aérien.'; range = '65–72 % — Contemporaine';
+    arc.style.stroke = '#C8873A';
   } else {
-    style = 'Très hydratée'; desc = 'Pâte exigeante, très collante. Réservé aux pizzaiolos expérimentés.'; range = '73–80 % — Expert';
+    style = 'Haute hydratation'; desc = 'Pâte très souple, très alvéolée. Pétrissage et façonnage exigeants — bassinage recommandé.'; range = '72–80 % — Expert';
+    arc.style.stroke = '#C0392B';
   }
   document.getElementById('hydro-style').textContent = style;
   document.getElementById('hydro-desc').textContent  = desc;
@@ -726,14 +1183,18 @@ function updateCircle(h) {
 
   // warning badge
   const warn = document.getElementById('hydro-warn');
-  if (h >= 62 && h <= 70) {
-    warn.textContent = '✓ Zone napolitaine contemporaine.';
+  if (h < 60) {
+    warn.textContent = '🏛️ Zone romaine — étalage au rouleau, cuisson longue.';
     warn.className = 'hydro-warning visible ok';
-  } else if (h > 74) {
-    warn.textContent = '⚠ Hydratation très élevée — technique avancée requise.';
-    warn.className = 'hydro-warning visible warn';
+  } else if (h < 65) {
+    warn.textContent = '🍕 Zone napolitaine classique — cornicione souple.';
+    warn.className = 'hydro-warning visible ok';
+  } else if (h <= 72) {
+    warn.textContent = '🔥 Zone contemporaine ✓ — ton style, alvéolage optimal.';
+    warn.className = 'hydro-warning visible ok';
   } else {
-    warn.className = 'hydro-warning';
+    warn.textContent = '⚠ Très haute hydratation — technique avancée requise.';
+    warn.className = 'hydro-warning visible warn';
   }
 }
 
@@ -741,6 +1202,7 @@ function updateCircle(h) {
 function onSliderChange(val) {
   state.hydro = parseInt(val);
   document.getElementById('inp-hydro').value = val;
+  syncPresetFromHydro(state.hydro);
   calc();
 }
 
@@ -748,6 +1210,7 @@ function onHydroInput(val) {
   const h = Math.max(55, Math.min(80, parseInt(val) || 65));
   state.hydro = h;
   document.getElementById('slider-hydro').value = h;
+  syncPresetFromHydro(h);
   calc();
 }
 
@@ -1141,10 +1604,15 @@ function showPanel(name, btn) {
   window.scrollTo(0, 0);
 }
 
+// Init
+state.levType = 'levain';
+document.getElementById('lev-type-note').textContent = LEV_NOTES['levain'];
 calc();
+syncPresetFromHydro(state.hydro);
 renderToppings();
 renderTracker();
 renderAnnual();
+updateFermLabel();
 </script>
 </body>
 </html>
