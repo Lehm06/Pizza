@@ -1,0 +1,1770 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pizzaiolo — Calculateur napolitain contemporain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --cream: #F7F3ED;
+  --cream2: #EDE7DC;
+  --cream3: #E2D9CC;
+  --white: #FFFFFF;
+  --ink: #1A1208;
+  --ink2: #3D2E1A;
+  --muted: #8C7A64;
+  --accent: #C8873A;
+  --accent-light: #F5E6D3;
+  --accent-dim: rgba(200,135,58,0.12);
+  --red: #C0392B;
+  --red-light: #F9E8E6;
+  --green: #2D6A4F;
+  --green-light: #E6F0EB;
+  --border: rgba(26,18,8,0.1);
+  --border2: rgba(26,18,8,0.18);
+  --radius: 10px;
+  --radius-lg: 16px;
+  --font: 'Inter', sans-serif;
+  --display: 'Playfair Display', serif;
+  --mono: 'JetBrains Mono', monospace;
+  --shadow: 0 2px 12px rgba(26,18,8,0.08);
+  --shadow-lg: 0 6px 28px rgba(26,18,8,0.12);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font);
+  min-height: 100vh;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* HEADER */
+header {
+  background: var(--ink);
+  color: var(--cream);
+  padding: 1.5rem 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.header-brand {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+}
+.header-title {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 26px;
+  color: var(--cream);
+  letter-spacing: -0.02em;
+}
+.header-sub {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 500;
+}
+.header-badge {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(247,243,237,0.4);
+  border: 1px solid rgba(247,243,237,0.15);
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+/* Section panels — desktop: flow into 2-column grid; mobile: one at a time */
+.section-panel { display: contents; }
+
+/* Desktop: assign panels to grid columns */
+#panel-impasto,
+#panel-protocole { grid-column: 1; display: flex; flex-direction: column; gap: 20px; }
+
+#panel-calories,
+#panel-garnitures,
+#panel-suivi { grid-column: 2; display: flex; flex-direction: column; gap: 20px; }
+
+/* MAIN LAYOUT */
+.main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 2rem 4rem;
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  body { padding-bottom: 72px; }
+
+  header {
+    padding: 0.9rem 1.1rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-title { font-size: 21px; }
+  .header-sub { display: none; }
+  .header-badge { display: none; }
+
+  .main {
+    grid-template-columns: 1fr;
+    padding: 12px 12px 20px;
+    gap: 12px;
+    display: block;
+  }
+
+  /* Each panel hidden by default on mobile */
+  .section-panel,
+  #panel-impasto,
+  #panel-protocole,
+  #panel-calories,
+  #panel-garnitures,
+  #panel-suivi {
+    display: none;
+    grid-column: unset;
+  }
+  .section-panel.active {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* Card sizing */
+  .card-body { padding: 1rem; }
+  .card-header { padding: 0.85rem 1rem; }
+
+  /* Bigger touch targets */
+  .paton-btn { width: 46px; height: 46px; font-size: 22px; }
+  .paton-count { width: 46px; font-size: 19px; }
+  .ferm-btn { padding: 12px 0; font-size: 16px; }
+  .tab-btn { padding: 10px 6px; font-size: 12px; }
+
+  /* Sliders */
+  input[type="range"] { height: 6px; }
+  input[type="range"]::-webkit-slider-thumb { width: 26px; height: 26px; }
+  input[type="range"]::-moz-range-thumb { width: 26px; height: 26px; }
+
+  /* Inputs */
+  .field-input-wrap input { padding: 11px 12px; font-size: 17px; }
+  .field-unit { padding: 0 14px; font-size: 13px; }
+
+  /* Hydro circle */
+  .hydro-circle-wrap { width: 90px; height: 90px; }
+  .hydro-svg { width: 90px; height: 90px; }
+  .hydro-pct { font-size: 18px; }
+  .hydro-style { font-size: 17px; }
+
+  /* Garnitures */
+  .garnitures-grid { grid-template-columns: 1fr; }
+  .topping-item { padding: 11px 12px; }
+  .topping-check { width: 20px; height: 20px; border-radius: 5px; }
+  .topping-name { font-size: 14px; }
+
+  /* Stats & results */
+  .result-val { font-size: 20px; }
+  .stat-val { font-size: 16px; }
+  .steps-list li { font-size: 14px; padding: 12px 0; }
+  .cal-total-val { font-size: 32px; }
+
+  /* Bottom nav */
+  .bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--ink);
+    z-index: 200;
+    padding-bottom: env(safe-area-inset-bottom);
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .bottom-nav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 10px 0 8px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: rgba(247,243,237,0.45);
+    font-family: var(--font);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    transition: color .15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .bottom-nav-btn.active { color: var(--accent); }
+  .bottom-nav-btn .nav-icon { font-size: 20px; line-height: 1; }
+}
+
+@media (min-width: 601px) and (max-width: 900px) {
+  .garnitures-grid { grid-template-columns: repeat(2, 1fr); }
+  .hydro-circle-wrap { width: 100px; height: 100px; }
+  .hydro-svg { width: 100px; height: 100px; }
+  .hydro-pct { font-size: 20px; }
+}
+
+/* CARDS */
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.card-header {
+  padding: 1.1rem 1.4rem 0.9rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.card-header-icon {
+  font-size: 18px;
+  line-height: 1;
+}
+.card-header-title {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 17px;
+  color: var(--ink);
+  font-weight: 700;
+}
+.card-header-note {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.card-body { padding: 1.4rem; }
+
+/* HYDRATION CIRCLE — signature element */
+.hydro-hero {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 1.6rem;
+}
+.hydro-circle-wrap {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  flex-shrink: 0;
+}
+.hydro-svg { width: 110px; height: 110px; transform: rotate(-90deg); }
+.hydro-track { fill: none; stroke: var(--cream2); stroke-width: 8; }
+.hydro-arc {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 8;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.5s cubic-bezier(.4,0,.2,1), stroke 0.3s;
+}
+.hydro-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.hydro-pct {
+  font-family: var(--mono);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1;
+}
+.hydro-pct-label {
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+.hydro-info { flex: 1; }
+.hydro-style {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 20px;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.hydro-desc {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.hydro-range {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 11px;
+  font-family: var(--mono);
+  color: var(--accent);
+  background: var(--accent-light);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+/* FIELD GROUPS */
+.field-group { margin-bottom: 1.1rem; }
+.field-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+.field-label-text {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.field-label-note {
+  font-size: 11px;
+  color: var(--muted);
+  font-family: var(--mono);
+}
+.field-input-wrap {
+  display: flex;
+  align-items: center;
+  background: var(--cream);
+  border: 1.5px solid var(--border2);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+.field-input-wrap:focus-within { border-color: var(--accent); }
+.field-input-wrap input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 9px 12px;
+  font-family: var(--mono);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ink);
+  min-width: 0;
+}
+.field-unit {
+  padding: 0 12px;
+  font-size: 12px;
+  font-family: var(--mono);
+  color: var(--muted);
+  border-left: 1px solid var(--border);
+  background: var(--cream2);
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+/* BIDIRECTIONAL — hydratation slider */
+.hydro-slider-wrap {
+  margin-top: -0.5rem;
+  margin-bottom: 1.1rem;
+}
+.hydro-slider-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 5px;
+  font-family: var(--mono);
+}
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(to right, var(--accent) 0%, var(--accent) var(--pct, 65%), var(--cream3) var(--pct, 65%), var(--cream3) 100%);
+  border-radius: 3px;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--white);
+  border: 2.5px solid var(--accent);
+  box-shadow: 0 1px 6px rgba(200,135,58,0.3);
+  cursor: pointer;
+}
+input[type="range"]::-moz-range-thumb {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--white);
+  border: 2.5px solid var(--accent);
+  cursor: pointer;
+}
+
+/* DIVIDER */
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1.2rem 0;
+}
+
+/* STATS ROW */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 1.2rem;
+}
+.stat-box {
+  background: var(--cream);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+}
+.stat-val {
+  font-family: var(--mono);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.2;
+}
+.stat-lbl {
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+.stat-box.accent { background: var(--accent-light); border-color: rgba(200,135,58,0.3); }
+.stat-box.accent .stat-val { color: var(--accent); }
+
+/* PATONS */
+.paton-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 1rem;
+}
+.paton-count-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: var(--cream);
+  border: 1.5px solid var(--border2);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.paton-btn {
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background .12s, color .12s;
+}
+.paton-btn:hover { background: var(--cream2); color: var(--ink); }
+.paton-count {
+  font-family: var(--mono);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ink);
+  width: 36px;
+  text-align: center;
+}
+.paton-info {
+  flex: 1;
+  font-size: 12px;
+  color: var(--muted);
+}
+.paton-info strong { color: var(--ink); font-family: var(--mono); }
+
+/* TRADITION TIPS */
+.tip-box {
+  background: var(--green-light);
+  border-left: 3px solid var(--green);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 10px 14px;
+  margin-bottom: 1rem;
+  font-size: 12px;
+  color: var(--green);
+  line-height: 1.5;
+}
+.tip-box strong { font-weight: 600; }
+
+/* RECETTE STEPS */
+.steps-list { list-style: none; counter-reset: step-counter; }
+.steps-list li {
+  counter-increment: step-counter;
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--ink2);
+  line-height: 1.5;
+}
+.steps-list li:last-child { border-bottom: none; }
+.steps-list li::before {
+  content: counter(step-counter);
+  min-width: 22px;
+  height: 22px;
+  background: var(--ink);
+  color: var(--cream);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  flex-shrink: 0;
+  margin-top: 1px;
+  font-family: var(--mono);
+}
+
+/* ===== GARNITURES ===== */
+.garnitures-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 1rem;
+}
+.topping-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px 10px;
+  transition: border-color .15s, background .15s;
+  cursor: pointer;
+  user-select: none;
+}
+.topping-item.selected {
+  background: var(--accent-light);
+  border-color: rgba(200,135,58,0.4);
+}
+.topping-check {
+  width: 16px; height: 16px;
+  border-radius: 4px;
+  border: 1.5px solid var(--border2);
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--white);
+  transition: all .12s;
+}
+.topping-item.selected .topping-check {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.topping-check svg { display: none; }
+.topping-item.selected .topping-check svg { display: block; }
+.topping-name {
+  flex: 1;
+  font-size: 13px;
+  color: var(--ink);
+  font-weight: 500;
+  line-height: 1.3;
+}
+.topping-kcal {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+}
+.topping-qty-wrap {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+.topping-item.selected .topping-qty-wrap { display: flex; }
+
+/* CALORIES RESULT */
+.cal-total-card {
+  background: var(--ink);
+  border-radius: var(--radius-lg);
+  padding: 1.4rem;
+  color: var(--cream);
+  margin-bottom: 1rem;
+}
+.cal-total-label {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(247,243,237,0.5);
+  margin-bottom: 4px;
+}
+.cal-total-val {
+  font-family: var(--mono);
+  font-size: 36px;
+  font-weight: 600;
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 2px;
+}
+.cal-total-sub {
+  font-size: 12px;
+  color: rgba(247,243,237,0.5);
+}
+.cal-macro-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 1rem;
+}
+.cal-macro {
+  background: rgba(247,243,237,0.06);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+.cal-macro-val {
+  font-family: var(--mono);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--cream);
+}
+.cal-macro-lbl {
+  font-size: 10px;
+  color: rgba(247,243,237,0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-top: 1px;
+}
+
+/* SELECTED TOPPINGS LIST */
+.selected-list { list-style: none; }
+.selected-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.selected-list li:last-child { border-bottom: none; }
+.selected-list .s-name { color: var(--ink2); }
+.selected-list .s-macro {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--muted);
+}
+.selected-list .s-kcal {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-left: 8px;
+}
+
+/* QTY INLINE CONTROLS */
+.qty-inline {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--cream2);
+  border-radius: 6px;
+  padding: 2px;
+}
+.qty-inline button {
+  width: 20px; height: 20px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .1s;
+}
+.qty-inline button:hover { background: var(--cream3); color: var(--ink); }
+.qty-inline span {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  min-width: 28px;
+  text-align: center;
+  color: var(--ink);
+}
+
+/* TABS */
+.tab-bar {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: var(--cream2);
+  border-radius: var(--radius);
+  margin-bottom: 1rem;
+}
+.tab-btn {
+  flex: 1;
+  padding: 7px 10px;
+  font-size: 12px;
+  font-family: var(--font);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--muted);
+  background: transparent;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all .15s;
+}
+.tab-btn.active {
+  background: var(--white);
+  color: var(--ink);
+  box-shadow: 0 1px 4px rgba(26,18,8,0.1);
+}
+
+/* FARINE SELECTOR */
+.flour-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-bottom: 1rem;
+}
+.flour-btn {
+  padding: 8px 6px;
+  background: var(--cream);
+  border: 1.5px solid var(--border2);
+  border-radius: var(--radius);
+  cursor: pointer;
+  text-align: center;
+  transition: all .12s;
+  font-family: var(--font);
+}
+.flour-btn:hover { border-color: var(--accent); }
+.flour-btn.active {
+  background: var(--accent-light);
+  border-color: var(--accent);
+}
+.flour-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  display: block;
+}
+.flour-w {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  display: block;
+  margin-top: 1px;
+}
+
+/* AVERTISSEMENT HYDRO */
+.hydro-warning {
+  font-size: 11px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  margin-top: 6px;
+  display: none;
+}
+.hydro-warning.visible { display: block; }
+.hydro-warning.warn { background: #FEF3CD; color: #856404; border: 1px solid #FFDCA5; }
+.hydro-warning.ok { background: var(--green-light); color: var(--green); border: 1px solid #A8D5BB; }
+
+.section-sep {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 1.2rem 0;
+}
+.section-sep span {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.section-sep::before, .section-sep::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* FERMENTATION BUTTONS */
+.ferm-btn {
+  flex: 1;
+  padding: 9px 0;
+  font-size: 14px;
+  font-family: var(--mono);
+  font-weight: 500;
+  color: var(--muted);
+  background: var(--cream);
+  border: 1.5px solid var(--border2);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all .15s;
+  text-align: center;
+}
+.ferm-btn:hover { border-color: var(--accent); color: var(--ink); }
+.ferm-btn.active {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--cream);
+}
+
+/* right col layout */
+.right-col { display: flex; flex-direction: column; gap: 20px; }
+
+/* RESULT BLOCKS (read-only outputs) */
+.result-block {
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+}
+.result-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-brand">
+    <div class="header-title">Pizzaiolo</div>
+    <div class="header-sub">Napolitaine contemporaine</div>
+  </div>
+  <div class="header-badge">Forno &amp; Impasto</div>
+</header>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="bottom-nav-btn active" onclick="showSection('impasto',this)"><span class="nav-icon">🌾</span>Impasto</button>
+  <button class="bottom-nav-btn" onclick="showSection('protocole',this)"><span class="nav-icon">📋</span>Protocole</button>
+  <button class="bottom-nav-btn" onclick="showSection('calories',this)"><span class="nav-icon">🔥</span>Calories</button>
+  <button class="bottom-nav-btn" onclick="showSection('garnitures',this)"><span class="nav-icon">🍕</span>Garnitures</button>
+  <button class="bottom-nav-btn" onclick="showSection('suivi',this)"><span class="nav-icon">📊</span>Suivi</button>
+</nav>
+
+<div class="main">
+
+  <!-- PANEL: IMPASTO -->
+  <div class="section-panel" id="panel-impasto">
+    <!-- CALCULATEUR PÂTE -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-header-icon">🌾</span>
+        <span class="card-header-title">Calculateur d'impasto</span>
+        <span class="card-header-note">Napolitaine</span>
+      </div>
+      <div class="card-body">
+
+        <!-- HYDRATATION CIRCLE -->
+        <div class="hydro-hero">
+          <div class="hydro-circle-wrap">
+            <svg class="hydro-svg" viewBox="0 0 110 110">
+              <circle class="hydro-track" cx="55" cy="55" r="42"/>
+              <circle class="hydro-arc" id="hydro-arc" cx="55" cy="55" r="42"
+                stroke-dasharray="263.9"
+                stroke-dashoffset="92.4"/>
+            </svg>
+            <div class="hydro-center">
+              <div class="hydro-pct" id="hydro-pct">65%</div>
+              <div class="hydro-pct-label">hydrat.</div>
+            </div>
+          </div>
+          <div class="hydro-info">
+            <div class="hydro-style" id="hydro-style">Semi-légère</div>
+            <div class="hydro-desc" id="hydro-desc">Équilibre idéal entre extensibilité et structure. Facile à étaler, alvéoles généreuses.</div>
+            <div class="hydro-range" id="hydro-range">65–70 % — Contemporaine ★</div>
+          </div>
+        </div>
+
+        <!-- === 3 INPUTS === -->
+        <div class="section-sep"><span>Tes 3 paramètres</span></div>
+
+        <!-- HYDRATATION SLIDER -->
+        <div class="field-group">
+          <div class="field-label">
+            <span class="field-label-text">Hydratation</span>
+            <span class="field-label-note" id="lbl-hydro">65%</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <input type="range" id="slider-hydro" min="55" max="80" step="1" value="65" oninput="onSliderChange(this.value)" style="flex:1;">
+            <div class="field-input-wrap" style="width:88px; flex:none;">
+              <input type="number" id="inp-hydro" value="65" min="55" max="80" step="1" oninput="onHydroInput(this.value)" style="font-size:15px; padding:7px 8px;">
+              <div class="field-unit">%</div>
+            </div>
+          </div>
+          <div class="hydro-warning" id="hydro-warn"></div>
+        </div>
+
+        <!-- PATONS count + g -->
+        <div class="field-group">
+          <div class="field-label">
+            <span class="field-label-text">Nombre de patons</span>
+          </div>
+          <div class="paton-count-wrap" style="width:fit-content;">
+            <button class="paton-btn" onclick="changePaton(-1)">−</button>
+            <div class="paton-count" id="paton-count">4</div>
+            <button class="paton-btn" onclick="changePaton(1)">+</button>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-label">
+            <span class="field-label-text">Poids par paton</span>
+            <span class="field-label-note">pâte crue</span>
+          </div>
+          <div class="field-input-wrap">
+            <input type="number" id="inp-paton-g" value="280" min="150" max="600" step="5" oninput="calc()">
+            <div class="field-unit">g</div>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-label">
+            <span class="field-label-text">Fermentation à froid</span>
+            <span class="field-label-note" id="lbl-ferm">24h → levure 0.10%</span>
+          </div>
+          <div style="display:flex; gap:6px;">
+            <button class="ferm-btn active" data-h="24" onclick="onFermChange(24)">24h</button>
+            <button class="ferm-btn" data-h="48" onclick="onFermChange(48)">48h</button>
+            <button class="ferm-btn" data-h="72" onclick="onFermChange(72)">72h</button>
+          </div>
+        </div>
+        <div class="section-sep"><span>Recette calculée — Farine Tipo 00 W300</span></div>
+
+        <!-- RÉSULTATS READ-ONLY -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:1rem;">
+
+          <div class="result-block">
+            <div class="result-label">Farine Tipo 00</div>
+            <div class="result-val"><span id="r-farine">—</span><span class="result-unit">g</span></div>
+            <div class="result-pct">100% — base</div>
+          </div>
+
+          <div class="result-block">
+            <div class="result-label">Eau</div>
+            <div class="result-val"><span id="r-eau">—</span><span class="result-unit">g</span></div>
+            <div class="result-pct" id="r-eau-pct">65%</div>
+          </div>
+
+          <div class="result-block">
+            <div class="result-label">Sel fin</div>
+            <div class="result-val"><span id="r-sel">—</span><span class="result-unit">g</span></div>
+            <div class="result-pct">2.8% — fixe</div>
+          </div>
+
+          <div class="result-block">
+            <div class="result-label">Levure sèche</div>
+            <div class="result-val"><span id="r-levure">—</span><span class="result-unit">g</span></div>
+            <div class="result-pct" id="r-lev-pct">0.10% — 24h</div>
+          </div>
+
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-box accent">
+            <div class="stat-val" id="stat-total-pate">—</div>
+            <div class="stat-lbl">Total pâte (g)</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="stat-nb-patons">4</div>
+            <div class="stat-lbl">Patons</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="stat-paton-reel">—</div>
+            <div class="stat-lbl">g / paton réel</div>
+          </div>
+        </div>
+
+        <div class="tip-box" id="tip-box">
+          <strong>Napolitaine contemporaine :</strong> sel 2.8 %, levure sèche 0.2 %, fermentation à froid 24–72 h. Ajuste uniquement l'hydratation selon ta technique.
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- PANEL: PROTOCOLE -->
+  <div class="section-panel" id="panel-protocole">
+    <!-- RECETTE -->
+    <div class="card" id="panel-protocole-card">
+      <div class="card-header">
+        <span class="card-header-icon">📋</span>
+        <span class="card-header-title">Protocole</span>
+        <span class="card-header-note" id="proto-note">Fermentation 24h à froid</span>
+      </div>
+      <div class="card-body">
+        <ul class="steps-list" id="steps-list">
+          <li><strong>Réhydrater la levure sèche :</strong> mélanger la levure dans 30–40 ml d'eau tiède (35–38°C) prélevée sur le total. Laisser reposer 5–10 min jusqu'à apparition de mousse. Ne jamais dépasser 40°C — la levure mourrait.</li>
+          <li><strong>Dissoudre le sel</strong> dans le reste de l'eau froide. Réserver environ 10 % de cette eau pour la fin du pétrissage.</li>
+          <li><strong>Incorporer la farine</strong> dans l'eau salée progressivement, en mélangeant jusqu'à absorption complète. Éviter les grumeaux secs.</li>
+          <li><strong>Ajouter la levure réhydratée</strong> et incorporer en filet les 10 % d'eau restants. La pâte doit être homogène avant d'ajouter plus d'eau.</li>
+          <li><strong>Pétrir 20 min à la main</strong> (ou 10 min au pétrin vitesse lente) jusqu'à obtenir une pâte lisse, élastique et non collante. Test du voile : étirer un bout de pâte — elle doit devenir translucide sans se déchirer.</li>
+          <li><strong>Pointage :</strong> couvrir d'un linge humide ou filmer au contact. Laisser reposer <span id="proto-pointage">1h</span> à température ambiante (20–22°C).</li>
+          <li><strong>Boulage :</strong> diviser en patons, former des boules tendues en pinçant vers le bas. Placer dans des boîtes hermétiques légèrement huilées, bien espacées.</li>
+          <li><strong>Fermentation à froid :</strong> placer au réfrigérateur (4°C) pendant <span id="proto-ferm-h">24h</span>. La fermentation lente développe arômes et alvéolage. Ne pas ouvrir les boîtes pendant cette période.</li>
+          <li><strong>Avant cuisson :</strong> sortir les patons <span id="proto-sortir">2h</span> avant utilisation. Les laisser revenir à température ambiante, couverts. Ne jamais étaler une pâte froide — elle se rétracte.</li>
+          <li><strong>Étalage :</strong> travailler à la main sur un plan fariné en partant du centre vers l'extérieur. Ne jamais utiliser de rouleau — il chasse les bulles de gaz.</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  </div>
+
+  <!-- PANEL: CALORIES -->
+  <div class="section-panel" id="panel-calories">
+    <!-- CALORIES PAR PATON -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-header-icon">🔥</span>
+        <span class="card-header-title">Calories par pizza</span>
+        <span class="card-header-note">paton + garnitures</span>
+      </div>
+      <div class="card-body">
+
+        <div class="cal-total-card">
+          <div class="cal-total-label">Total estimé par pizza</div>
+          <div class="cal-total-val" id="cal-total">—</div>
+          <div class="cal-total-sub" id="cal-total-sub">pâte seule</div>
+          <div class="cal-macro-row">
+            <div class="cal-macro">
+              <div class="cal-macro-val" id="cal-prot">—</div>
+              <div class="cal-macro-lbl">Protéines</div>
+            </div>
+            <div class="cal-macro">
+              <div class="cal-macro-val" id="cal-carb">—</div>
+              <div class="cal-macro-lbl">Glucides</div>
+            </div>
+            <div class="cal-macro">
+              <div class="cal-macro-val" id="cal-fat">—</div>
+              <div class="cal-macro-lbl">Lipides</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DÉTAIL -->
+        <div id="selected-detail" style="display:none;">
+          <div class="section-sep"><span>Détail</span></div>
+          <ul class="selected-list" id="selected-list"></ul>
+        </div>
+
+        <div style="margin-top:1.2rem;">
+          <button onclick="enregistrerPizza()" style="width:100%; padding:11px; background:var(--ink); border:none; border-radius:var(--radius); color:var(--cream); font-family:var(--font); font-size:14px; font-weight:600; cursor:pointer; letter-spacing:0.02em; transition:opacity .15s;" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+            🍕 Enregistrer cette pizza
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- PANEL: GARNITURES -->
+  <div class="section-panel" id="panel-garnitures">
+    <!-- GARNITURES -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-header-icon">🍕</span>
+        <span class="card-header-title">Garnitures</span>
+        <span class="card-header-note">sélectionner + ajuster</span>
+      </div>
+      <div class="card-body">
+
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="filterTopping('all', this)">Tout</button>
+          <button class="tab-btn" onclick="filterTopping('base', this)">Bases</button>
+          <button class="tab-btn" onclick="filterTopping('charcuterie', this)">Charcut.</button>
+          <button class="tab-btn" onclick="filterTopping('fromage', this)">Fromages</button>
+          <button class="tab-btn" onclick="filterTopping('legume', this)">Légumes</button>
+        </div>
+
+        <div class="garnitures-grid" id="topping-grid"></div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- PANEL: SUIVI -->
+  <div class="section-panel" id="panel-suivi">
+
+    <!-- TRACKER MENSUEL -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-header-icon">📊</span>
+        <span class="card-header-title">Suivi mensuel</span>
+        <span class="card-header-note" id="tracker-month-label">—</span>
+      </div>
+      <div class="card-body">
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:1.2rem;">
+          <div class="stat-box accent">
+            <div class="stat-val" id="tr-nb">0</div>
+            <div class="stat-lbl">Pizzas ce mois</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="tr-kcal">0</div>
+            <div class="stat-lbl">kcal totales</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="tr-avg">—</div>
+            <div class="stat-lbl">kcal / pizza</div>
+          </div>
+        </div>
+
+        <!-- MINI CHART MENSUEL -->
+        <div id="tr-chart" style="display:flex; align-items:flex-end; gap:4px; height:64px; margin-bottom:1.2rem;"></div>
+
+        <!-- LISTE ENTRÉES -->
+        <div class="section-sep"><span>Historique</span></div>
+        <div id="tr-list" style="max-height:280px; overflow-y:auto;"></div>
+
+        <div style="display:flex; justify-content:flex-end; margin-top:1rem;">
+          <button onclick="clearMonth()" style="font-size:12px; color:var(--muted); background:none; border:1px solid var(--border2); border-radius:6px; padding:5px 12px; cursor:pointer; font-family:var(--font);">Effacer ce mois</button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TRACKER ANNUEL -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-header-icon">📈</span>
+        <span class="card-header-title">Suivi annuel</span>
+        <span class="card-header-note" id="tracker-year-label">—</span>
+      </div>
+      <div class="card-body">
+
+        <!-- STATS ANNÉE -->
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:1.4rem;">
+          <div class="stat-box accent">
+            <div class="stat-val" id="yr-nb">0</div>
+            <div class="stat-lbl">Pizzas cette année</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="yr-kcal">0</div>
+            <div class="stat-lbl">kcal totales</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="yr-month-avg">—</div>
+            <div class="stat-lbl">/ mois en moy.</div>
+          </div>
+        </div>
+
+        <!-- CHART MENSUEL ANNUEL -->
+        <div class="section-sep"><span>Pizzas par mois</span></div>
+        <div id="yr-chart" style="display:flex; align-items:flex-end; gap:6px; height:80px; margin-bottom:6px;"></div>
+        <div id="yr-chart-labels" style="display:flex; gap:6px; margin-bottom:1.2rem;"></div>
+
+        <!-- RECORD + BEST MONTH -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:1rem;">
+          <div class="result-block">
+            <div class="result-label">Mois record</div>
+            <div style="font-size:16px; font-weight:600; color:var(--ink); margin-top:4px;" id="yr-best-month">—</div>
+            <div class="result-pct" id="yr-best-count">—</div>
+          </div>
+          <div class="result-block">
+            <div class="result-label">Moy. kcal/pizza</div>
+            <div style="font-size:16px; font-weight:600; color:var(--ink); margin-top:4px;" id="yr-avg-kcal">—</div>
+            <div class="result-pct">sur l'année</div>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- end tracker annuel card -->
+
+  </div><!-- end panel-suivi -->
+  </div>
+
+</div><!-- end main -->
+
+<script>
+<script>
+// ======= DATA =======
+const TOPPINGS = [
+  // base
+  { id:'sauce', name:'Sauce tomate Mutti', cat:'base', emoji:'🍅', kcal100:32, prot100:1.6, carb100:5.6, fat100:0.5, defaultG:80, brand:'Mutti Polpa' },
+  { id:'huileo', name:'Huile d\'olive', cat:'base', emoji:'🫒', kcal100:884, prot100:0, carb100:0, fat100:100, defaultG:10 },
+  { id:'ail', name:'Ail', cat:'base', emoji:'🧄', kcal100:149, prot100:6, carb100:33, fat100:0.5, defaultG:5 },
+  // fromages
+  { id:'mozz', name:'Mozzarella di bufala', cat:'fromage', emoji:'🧀', kcal100:259, prot100:17, carb100:2, fat100:20, defaultG:80 },
+  { id:'mozz-rape', name:'Mozzarella râpée', cat:'fromage', emoji:'🧀', kcal100:280, prot100:20, carb100:2, fat100:22, defaultG:80 },
+  { id:'fior', name:'Fior di latte', cat:'fromage', emoji:'🥛', kcal100:242, prot100:18, carb100:2.7, fat100:18, defaultG:80 },
+  { id:'fromageb', name:'Fromage blanc', cat:'fromage', emoji:'🍶', kcal100:77, prot100:11, carb100:3.5, fat100:3, defaultG:80 },
+  { id:'creme', name:'Crème 30%', cat:'fromage', emoji:'🥛', kcal100:292, prot100:2.5, carb100:3, fat100:30, defaultG:50 },
+  { id:'ricotta', name:'Ricotta', cat:'fromage', emoji:'🧀', kcal100:174, prot100:11, carb100:3, fat100:13, defaultG:60 },
+  { id:'gorgon', name:'Gorgonzola', cat:'fromage', emoji:'🧀', kcal100:362, prot100:21, carb100:1, fat100:31, defaultG:40 },
+  { id:'parmes', name:'Parmesan râpé', cat:'fromage', emoji:'🧀', kcal100:431, prot100:38, carb100:3, fat100:29, defaultG:20 },
+  // charcuterie
+  { id:'jambon', name:'Jambon blanc Herta', cat:'charcuterie', emoji:'🥩', kcal100:107, prot100:16.5, carb100:1.3, fat100:4.0, defaultG:60, brand:'Herta Le Bon Paris' },
+  { id:'chorizo', name:'Chorizo', cat:'charcuterie', emoji:'🌶️', kcal100:455, prot100:24, carb100:2, fat100:40, defaultG:40 },
+  { id:'pepperoni', name:'Pepperoni', cat:'charcuterie', emoji:'🍕', kcal100:494, prot100:22, carb100:2, fat100:45, defaultG:40 },
+  { id:'coppa', name:'Coppa', cat:'charcuterie', emoji:'🥩', kcal100:420, prot100:26, carb100:1, fat100:35, defaultG:40 },
+  { id:'nduja', name:'Nduja', cat:'charcuterie', emoji:'🌶️', kcal100:500, prot100:22, carb100:2, fat100:46, defaultG:30 },
+  { id:'anchois', name:'Anchois', cat:'charcuterie', emoji:'🐟', kcal100:135, prot100:20, carb100:0, fat100:6, defaultG:25 },
+  // légumes
+  { id:'champignon', name:'Champignons', cat:'legume', emoji:'🍄', kcal100:22, prot100:3, carb100:3, fat100:0.3, defaultG:70 },
+  { id:'olives', name:'Olives noires', cat:'legume', emoji:'🫒', kcal100:145, prot100:1, carb100:4, fat100:14, defaultG:30 },
+  { id:'poivron', name:'Poivrons', cat:'legume', emoji:'🫑', kcal100:31, prot100:1, carb100:6, fat100:0.3, defaultG:50 },
+  { id:'courgette', name:'Courgettes', cat:'legume', emoji:'🥒', kcal100:17, prot100:1, carb100:3, fat100:0.2, defaultG:50 },
+  { id:'roquette', name:'Roquette', cat:'legume', emoji:'🌿', kcal100:25, prot100:2.5, carb100:4, fat100:0.7, defaultG:20 },
+  { id:'tomate-c', name:'Tomates cerises', cat:'legume', emoji:'🍅', kcal100:18, prot100:1, carb100:4, fat100:0.2, defaultG:60 },
+  { id:'artichaut', name:'Artichauts', cat:'legume', emoji:'🌱', kcal100:53, prot100:3, carb100:10, fat100:0.3, defaultG:50 },
+  { id:'basilic', name:'Basilic frais', cat:'legume', emoji:'🌿', kcal100:23, prot100:3, carb100:1, fat100:0.6, defaultG:5 },
+];
+
+// ======= CONSTANTS napolitaine contemporaine =======
+const SEL_PCT   = 0.028;   // 2.8% du poids de farine
+// Levure sèche selon durée fermentation à froid :
+// 24h → 0.10% / 48h → 0.05% / 72h → 0.03%
+const LEV_BY_FERM = { 24: 0.001, 48: 0.0005, 72: 0.0003 };
+const CIRC      = 2 * Math.PI * 42; // 263.9
+
+let state = {
+  hydro:   65,   // %
+  patonG:  280,  // g par paton (pâte crue)
+  patons:  4,
+  ferm:    24,   // h — durée fermentation
+  toppings: {},
+};
+
+// ======= CORE CALC =======
+// Entrées : hydro (%), patonG (g), patons (n)
+// Poids total pâte = patonG × patons
+// Pâte = farine + eau + sel + levure
+// eau   = farine × hydro/100
+// sel   = farine × 2.8%
+// levure= farine × 0.3%
+// total = farine × (1 + hydro/100 + 0.028 + 0.003)
+// → farine = total / (1 + hydro/100 + 0.031)
+
+function computeRecette() {
+  const LEV_PCT  = LEV_BY_FERM[state.ferm] || 0.001;
+  const totalPate = state.patonG * state.patons;
+  const div = 1 + state.hydro / 100 + SEL_PCT + LEV_PCT;
+  const farine  = totalPate / div;
+  const eau     = farine * state.hydro / 100;
+  const sel     = farine * SEL_PCT;
+  const levure  = farine * LEV_PCT;
+  return { farine, eau, sel, levure, totalPate, LEV_PCT };
+}
+
+function calc() {
+  state.hydro  = parseInt(document.getElementById('slider-hydro').value);
+  state.patonG = parseFloat(document.getElementById('inp-paton-g').value) || 280;
+
+  const { farine, eau, sel, levure, totalPate, LEV_PCT } = computeRecette();
+
+  // Update circle & labels
+  updateCircle(state.hydro);
+
+  // Sync number input with slider
+  document.getElementById('inp-hydro').value = state.hydro;
+  document.getElementById('lbl-hydro').textContent = state.hydro + '%';
+
+  // Result blocks
+  document.getElementById('r-farine').textContent = Math.round(farine);
+  document.getElementById('r-eau').textContent    = Math.round(eau);
+  document.getElementById('r-sel').textContent    = sel.toFixed(1);
+  document.getElementById('r-levure').textContent = levure.toFixed(2);
+  document.getElementById('r-eau-pct').textContent = state.hydro + '%';
+  document.getElementById('r-lev-pct').textContent = (LEV_PCT * 100).toFixed(2) + '% — ' + state.ferm + 'h';
+
+  // Stats
+  document.getElementById('stat-total-pate').textContent = Math.round(totalPate) + 'g';
+  document.getElementById('stat-nb-patons').textContent   = state.patons;
+  document.getElementById('stat-paton-reel').textContent  = Math.round(totalPate / state.patons) + 'g';
+
+  // Tip
+  let tipDesc = '';
+  if (state.hydro < 62) tipDesc = 'Hydratation basse — pâte ferme, facile à étaler, cornicione plus dense.';
+  else if (state.hydro <= 68) tipDesc = 'Zone idéale napolitaine contemporaine ✓ — alvéolage généreux, bonne légèreté.';
+  else if (state.hydro <= 72) tipDesc = 'Haute hydratation — pâte collante, nécessite un pétrissage soigné et un plan de travail fariné.';
+  else tipDesc = 'Très haute hydratation — technique avancée requise. Préférer un bassinage progressif.';
+
+  const fermTip = { 24: 'Sortir la pâte 2h avant utilisation.', 48: 'Optimum goût/alvéolage — sortir 3h avant.', 72: 'Saveurs maximales, pâte très extensible — sortir 4h avant.' };
+  document.getElementById('tip-box').innerHTML =
+    '<strong>Conseil :</strong> ' + tipDesc + ' ' + fermTip[state.ferm];
+
+  updateCalories();
+}
+
+function onFermChange(h) {
+  state.ferm = parseInt(h);
+  const levPctMap  = { 24: '0.10%', 48: '0.05%', 72: '0.03%' };
+  const pointageMap = { 24: '1h', 48: '1h30', 72: '2h' };
+  const sortirMap  = { 24: '2h', 48: '3h', 72: '4h' };
+  document.getElementById('lbl-ferm').textContent = h + 'h → levure ' + levPctMap[h];
+  document.getElementById('proto-note').textContent = 'Fermentation ' + h + 'h à froid';
+  document.getElementById('proto-ferm-h').textContent = h + 'h';
+  document.getElementById('proto-pointage').textContent = pointageMap[h];
+  document.getElementById('proto-sortir').textContent = sortirMap[h];
+  document.querySelectorAll('.ferm-btn').forEach(b => {
+    b.classList.toggle('active', parseInt(b.dataset.h) === state.ferm);
+  });
+  calc();
+}
+
+// ======= CIRCLE =======
+function updateCircle(h) {
+  const pct    = Math.max(0, Math.min(1, (h - 55) / 25));
+  const offset = CIRC * (1 - pct);
+  const arc    = document.getElementById('hydro-arc');
+  arc.style.strokeDashoffset = offset.toFixed(1);
+  arc.style.stroke = h < 62 ? '#2D6A4F' : h > 73 ? '#C0392B' : '#C8873A';
+
+  document.getElementById('hydro-pct').textContent = h + '%';
+
+  // slider track fill
+  const sliderPct = ((h - 55) / 25 * 100).toFixed(1);
+  document.getElementById('slider-hydro').style.setProperty('--pct', sliderPct + '%');
+
+  // style description
+  let style, desc, range;
+  if (h < 62) {
+    style = 'Ferme'; desc = 'Pâte compacte, facile à étaler. Cornicione moins gonflé.'; range = '55–62 % — Traditionnelle';
+  } else if (h <= 68) {
+    style = 'Contemporaine'; desc = 'Équilibre parfait extensibilité / structure. Alvéoles généreuses, cornicione gonflé.'; range = '62–68 % — Recommandé ★';
+  } else if (h <= 73) {
+    style = 'Haute hydratation'; desc = 'Pâte souple et légère. Demande une bonne maîtrise du pétrissage.'; range = '68–73 % — Avancé';
+  } else {
+    style = 'Très hydratée'; desc = 'Pâte exigeante, très collante. Réservé aux pizzaiolos expérimentés.'; range = '73–80 % — Expert';
+  }
+  document.getElementById('hydro-style').textContent = style;
+  document.getElementById('hydro-desc').textContent  = desc;
+  document.getElementById('hydro-range').textContent = range;
+
+  // warning badge
+  const warn = document.getElementById('hydro-warn');
+  if (h >= 62 && h <= 70) {
+    warn.textContent = '✓ Zone napolitaine contemporaine.';
+    warn.className = 'hydro-warning visible ok';
+  } else if (h > 74) {
+    warn.textContent = '⚠ Hydratation très élevée — technique avancée requise.';
+    warn.className = 'hydro-warning visible warn';
+  } else {
+    warn.className = 'hydro-warning';
+  }
+}
+
+// ======= INPUTS =======
+function onSliderChange(val) {
+  state.hydro = parseInt(val);
+  document.getElementById('inp-hydro').value = val;
+  calc();
+}
+
+function onHydroInput(val) {
+  const h = Math.max(55, Math.min(80, parseInt(val) || 65));
+  state.hydro = h;
+  document.getElementById('slider-hydro').value = h;
+  calc();
+}
+
+function changePaton(delta) {
+  state.patons = Math.max(1, Math.min(20, state.patons + delta));
+  document.getElementById('paton-count').textContent = state.patons;
+  calc();
+}
+
+// ======= CALORIES =======
+// Farine Tipo 00 : 364 kcal/100g, prot 11g, glucides 76g, lipides 1g
+// On calcule la proportion de farine dans le paton pour les kcal
+function calcPatonKcal() {
+  const { farine, totalPate } = computeRecette();
+  const patonG = state.patonG;
+  const farPct = farine / totalPate; // proportion farine dans pâte totale
+  const farG   = patonG * farPct;
+  return {
+    kcal: Math.round(farG * 3.64),
+    prot: Math.round(farG * 0.11),
+    carb: Math.round(farG * 0.76),
+    fat:  Math.round(farG * 0.01),
+  };
+}
+
+function updateCalories() {
+  const base = calcPatonKcal();
+  let totalKcal = base.kcal, totalProt = base.prot, totalCarb = base.carb, totalFat = base.fat;
+  const items = [{ name: 'Pâte (' + Math.round(state.patonG) + 'g)', kcal: base.kcal, prot: base.prot, carb: base.carb, fat: base.fat }];
+
+  Object.keys(state.toppings).forEach(id => {
+    const t = TOPPINGS.find(x => x.id === id);
+    const g = state.toppings[id];
+    if (!t || !g) return;
+    const kcal = Math.round(t.kcal100 * g / 100);
+    const prot = Math.round(t.prot100 * g / 100 * 10) / 10;
+    const carb = Math.round(t.carb100 * g / 100 * 10) / 10;
+    const fat  = Math.round(t.fat100  * g / 100 * 10) / 10;
+    totalKcal += kcal; totalProt += prot; totalCarb += carb; totalFat += fat;
+    items.push({ id: t.id, g, emoji: t.emoji, tname: t.name, name: t.emoji + ' ' + t.name + ' (' + g + 'g)', kcal, prot, carb, fat });
+  });
+
+  document.getElementById('cal-total').textContent    = totalKcal + ' kcal';
+  document.getElementById('cal-total-sub').textContent = items.length > 1 ? 'pâte + ' + (items.length - 1) + ' garniture(s)' : 'pâte seule';
+  document.getElementById('cal-prot').textContent = Math.round(totalProt) + 'g';
+  document.getElementById('cal-carb').textContent = Math.round(totalCarb) + 'g';
+  document.getElementById('cal-fat').textContent  = Math.round(totalFat)  + 'g';
+
+  const detail = document.getElementById('selected-detail');
+  const list   = document.getElementById('selected-list');
+  if (items.length > 1) {
+    detail.style.display = 'block';
+    list.innerHTML = items.map((it, i) => {
+      if (i === 0) {
+        // pâte — non editable
+        return `<li>
+          <span class="s-name">${it.name}</span>
+          <span style="display:flex; align-items:center; gap:6px;">
+            <span class="s-macro">P${Math.round(it.prot)}g G${Math.round(it.carb)}g L${Math.round(it.fat)}g</span>
+            <span class="s-kcal">${it.kcal} kcal</span>
+          </span>
+        </li>`;
+      }
+      return `<li>
+        <span class="s-name">${it.emoji} ${it.tname}</span>
+        <span style="display:flex; align-items:center; gap:8px;">
+          <input
+            type="number"
+            value="${it.g}"
+            min="1" max="500" step="1"
+            style="width:54px; padding:3px 5px; font-family:var(--mono); font-size:12px; background:var(--cream); border:1px solid var(--border2); border-radius:5px; color:var(--ink); text-align:center; outline:none;"
+            oninput="onGInput('${it.id}', this.value); renderToppings();"
+            onfocus="this.select()"
+          ><span style="font-size:11px;color:var(--muted);font-family:var(--mono);">g</span>
+          <span class="s-macro">P${Math.round(it.prot)}g G${Math.round(it.carb)}g L${Math.round(it.fat)}g</span>
+          <span class="s-kcal">${it.kcal} kcal</span>
+        </span>
+      </li>`;
+    }).join('');
+  } else {
+    detail.style.display = 'none';
+  }
+}
+
+// ======= TOPPINGS =======
+let currentCat = 'all';
+
+function filterTopping(cat, btn) {
+  currentCat = cat;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderToppings();
+}
+
+function renderToppings() {
+  const grid = document.getElementById('topping-grid');
+  const list = currentCat === 'all' ? TOPPINGS : TOPPINGS.filter(t => t.cat === currentCat);
+  grid.innerHTML = list.map(t => {
+    const sel = state.toppings[t.id] !== undefined;
+    const g   = sel ? state.toppings[t.id] : t.defaultG;
+    const brandLine = t.brand ? `<div style="font-size:10px; color:var(--accent); font-family:var(--mono); margin-top:1px;">${t.brand}</div>` : '';
+    return `<div class="topping-item${sel ? ' selected' : ''}" id="ti-${t.id}" onclick="toggleTopping('${t.id}', event)">
+      <div class="topping-check">
+        <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div style="flex:1; min-width:0;">
+        <div class="topping-name">${t.emoji} ${t.name}</div>
+        ${brandLine}
+        <div class="topping-kcal">${t.kcal100} kcal / 100g</div>
+        <div class="topping-qty-wrap" onclick="event.stopPropagation()">
+          <div style="display:flex; align-items:center; gap:6px; margin-top:6px;">
+            <input
+              type="number"
+              id="qty-${t.id}"
+              value="${g}"
+              min="1" max="500" step="1"
+              style="width:62px; padding:4px 6px; font-family:var(--mono); font-size:13px; font-weight:500; background:var(--white); border:1.5px solid var(--border2); border-radius:6px; color:var(--ink); outline:none; text-align:center;"
+              oninput="onGInput('${t.id}', this.value)"
+              onfocus="this.select()"
+            >
+            <span style="font-size:12px; color:var(--muted); font-family:var(--mono);">g</span>
+            <span style="font-size:11px; color:var(--muted);" id="kcal-inline-${t.id}">${Math.round(t.kcal100 * g / 100)} kcal</span>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleTopping(id, e) {
+  if (e.target.tagName === 'INPUT') return;
+  const t = TOPPINGS.find(x => x.id === id);
+  if (state.toppings[id] !== undefined) {
+    delete state.toppings[id];
+  } else {
+    state.toppings[id] = t.defaultG;
+  }
+  renderToppings();
+  updateCalories();
+}
+
+function onGInput(id, val) {
+  const g = Math.max(1, parseInt(val) || 1);
+  if (state.toppings[id] !== undefined) {
+    state.toppings[id] = g;
+    const t = TOPPINGS.find(x => x.id === id);
+    const kcalEl = document.getElementById('kcal-inline-' + id);
+    if (kcalEl) kcalEl.textContent = Math.round(t.kcal100 * g / 100) + ' kcal';
+    updateCalories();
+  }
+}
+
+// ======= TRACKER =======
+function storageKey() {
+  const now = new Date();
+  return 'pizza_' + now.getFullYear() + '_' + String(now.getMonth() + 1).padStart(2, '0');
+}
+
+function loadEntries() {
+  try { return JSON.parse(localStorage.getItem(storageKey()) || '[]'); }
+  catch { return []; }
+}
+
+function saveEntries(entries) {
+  localStorage.setItem(storageKey(), JSON.stringify(entries));
+}
+
+function enregistrerPizza() {
+  const kcalEl = document.getElementById('cal-total').textContent;
+  const kcal = parseInt(kcalEl) || 0;
+  if (!kcal) { alert('Configure d\'abord tes garnitures pour calculer les calories.'); return; }
+
+  const garnitures = Object.keys(state.toppings).map(id => {
+    const t = TOPPINGS.find(x => x.id === id);
+    return t ? t.emoji + ' ' + t.name + ' (' + state.toppings[id] + 'g)' : '';
+  }).filter(Boolean);
+
+  const entry = {
+    id: Date.now(),
+    date: new Date().toISOString(),
+    kcal,
+    paton: Math.round(state.patonG),
+    hydro: state.hydro,
+    ferm: state.ferm,
+    garnitures,
+  };
+
+  const entries = loadEntries();
+  entries.push(entry);
+  saveEntries(entries);
+  renderTracker();
+  renderAnnual();
+
+  // Flash confirmation
+  const btn = event.currentTarget;
+  btn.textContent = '✓ Enregistrée !';
+  btn.style.background = 'var(--green)';
+  setTimeout(() => { btn.textContent = '🍕 Enregistrer cette pizza'; btn.style.background = 'var(--ink)'; }, 1800);
+}
+
+function deleteEntry(id) {
+  const entries = loadEntries().filter(e => e.id !== id);
+  saveEntries(entries);
+  renderTracker();
+  renderAnnual();
+}
+
+function clearMonth() {
+  if (!confirm('Effacer tout l\'historique de ce mois ?')) return;
+  localStorage.removeItem(storageKey());
+  renderTracker();
+  renderAnnual();
+}
+
+function renderTracker() {
+  const entries = loadEntries();
+  const now = new Date();
+  const monthNames = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+  document.getElementById('tracker-month-label').textContent = monthNames[now.getMonth()] + ' ' + now.getFullYear();
+
+  const total = entries.reduce((s, e) => s + e.kcal, 0);
+  const avg = entries.length ? Math.round(total / entries.length) : 0;
+  document.getElementById('tr-nb').textContent = entries.length;
+  document.getElementById('tr-kcal').textContent = total.toLocaleString('fr');
+  document.getElementById('tr-avg').textContent = avg ? avg + ' kcal' : '—';
+
+  // Mini bar chart (by day of month)
+  const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+  const byDay = {};
+  entries.forEach(e => {
+    const d = new Date(e.date).getDate();
+    byDay[d] = (byDay[d] || 0) + 1;
+  });
+  const maxCount = Math.max(1, ...Object.values(byDay));
+  const chartEl = document.getElementById('tr-chart');
+  chartEl.innerHTML = '';
+  for (let d = 1; d <= daysInMonth; d++) {
+    const count = byDay[d] || 0;
+    const isToday = d === now.getDate();
+    const h = count ? Math.max(10, Math.round(count / maxCount * 56)) : 4;
+    const bar = document.createElement('div');
+    bar.title = `${d} — ${count} pizza${count > 1 ? 's' : ''}`;
+    bar.style.cssText = `flex:1; height:${h}px; border-radius:2px 2px 0 0; background:${count ? (isToday ? 'var(--accent)' : 'var(--ink)') : 'var(--cream3)'}; transition:height .3s; min-width:0;`;
+    chartEl.appendChild(bar);
+  }
+
+  // List
+  const listEl = document.getElementById('tr-list');
+  if (!entries.length) {
+    listEl.innerHTML = '<p style="font-size:13px; color:var(--muted); padding:1rem 0; text-align:center;">Aucune pizza enregistrée ce mois.</p>';
+    return;
+  }
+  listEl.innerHTML = [...entries].reverse().map(e => {
+    const d = new Date(e.date);
+    const dateStr = d.toLocaleDateString('fr-FR', { weekday:'short', day:'numeric', month:'short' });
+    const timeStr = d.toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' });
+    const garns = e.garnitures.length ? e.garnitures.join(', ') : 'nature';
+    return `<div style="display:flex; align-items:flex-start; gap:10px; padding:10px 0; border-bottom:1px solid var(--border);">
+      <div style="min-width:38px; height:38px; background:var(--cream2); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;">🍕</div>
+      <div style="flex:1; min-width:0;">
+        <div style="display:flex; justify-content:space-between; align-items:baseline; gap:6px;">
+          <span style="font-size:13px; font-weight:600; color:var(--ink);">${e.kcal} kcal</span>
+          <span style="font-size:11px; color:var(--muted); white-space:nowrap;">${dateStr} ${timeStr}</span>
+        </div>
+        <div style="font-size:11px; color:var(--muted); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${garns}</div>
+        <div style="font-size:10px; color:var(--accent); font-family:var(--mono); margin-top:2px;">${e.hydro}% hydrat. · paton ${e.paton}g · ${e.ferm}h</div>
+      </div>
+      <button onclick="deleteEntry(${e.id})" title="Supprimer" style="background:none; border:none; color:var(--muted); cursor:pointer; font-size:16px; padding:2px 4px; border-radius:4px; flex-shrink:0;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--muted)'">×</button>
+    </div>`;
+  }).join('');
+}
+
+function loadAllYearEntries() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const allEntries = [];
+  for (let m = 1; m <= 12; m++) {
+    const key = 'pizza_' + year + '_' + String(m).padStart(2, '0');
+    try {
+      const data = JSON.parse(localStorage.getItem(key) || '[]');
+      data.forEach(e => { e._month = m; allEntries.push(e); });
+    } catch {}
+  }
+  return allEntries;
+}
+
+function renderAnnual() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const monthNames = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
+  const monthNamesFull = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+
+  document.getElementById('tracker-year-label').textContent = year;
+
+  const allEntries = loadAllYearEntries();
+
+  const totalNb   = allEntries.length;
+  const totalKcal = allEntries.reduce((s, e) => s + e.kcal, 0);
+  const monthsWithData = new Set(allEntries.map(e => e._month)).size;
+  const monthAvg = monthsWithData ? Math.round(totalNb / monthsWithData) : 0;
+  const avgKcal  = totalNb ? Math.round(totalKcal / totalNb) : 0;
+
+  document.getElementById('yr-nb').textContent         = totalNb;
+  document.getElementById('yr-kcal').textContent       = totalKcal.toLocaleString('fr');
+  document.getElementById('yr-month-avg').textContent  = monthAvg || '—';
+  document.getElementById('yr-avg-kcal').textContent   = avgKcal ? avgKcal + ' kcal' : '—';
+
+  // Count per month
+  const byMonth = Array.from({length:12}, (_, i) => {
+    return allEntries.filter(e => e._month === i + 1).length;
+  });
+  const maxM = Math.max(1, ...byMonth);
+
+  // Best month
+  const bestIdx = byMonth.indexOf(Math.max(...byMonth));
+  if (byMonth[bestIdx] > 0) {
+    document.getElementById('yr-best-month').textContent = monthNamesFull[bestIdx];
+    document.getElementById('yr-best-count').textContent = byMonth[bestIdx] + ' pizza' + (byMonth[bestIdx] > 1 ? 's' : '');
+  } else {
+    document.getElementById('yr-best-month').textContent = '—';
+    document.getElementById('yr-best-count').textContent = 'aucune donnée';
+  }
+
+  // Bar chart
+  const chartEl = document.getElementById('yr-chart');
+  const labelsEl = document.getElementById('yr-chart-labels');
+  chartEl.innerHTML = '';
+  labelsEl.innerHTML = '';
+
+  byMonth.forEach((count, i) => {
+    const isCurrentMonth = (i + 1) === (now.getMonth() + 1);
+    const isBest = count > 0 && count === Math.max(...byMonth);
+    const barH = count ? Math.max(10, Math.round(count / maxM * 72)) : 4;
+
+    const col = document.createElement('div');
+    col.style.cssText = 'flex:1; display:flex; flex-direction:column; align-items:center; gap:2px;';
+
+    const bar = document.createElement('div');
+    bar.title = monthNamesFull[i] + ' — ' + count + ' pizza' + (count !== 1 ? 's' : '');
+    bar.style.cssText = `width:100%; height:${barH}px; border-radius:3px 3px 0 0; background:${
+      count === 0 ? 'var(--cream3)' :
+      isCurrentMonth ? 'var(--accent)' :
+      isBest ? 'var(--ink)' : 'var(--ink2)'
+    }; transition:height .4s; position:relative;`;
+
+    // count label on bar
+    if (count > 0) {
+      const lbl = document.createElement('div');
+      lbl.textContent = count;
+      lbl.style.cssText = 'position:absolute; top:-16px; left:0; right:0; text-align:center; font-size:10px; font-family:var(--mono); font-weight:600; color:var(--ink);';
+      bar.style.position = 'relative';
+      bar.appendChild(lbl);
+    }
+
+    col.appendChild(bar);
+    chartEl.appendChild(col);
+
+    // label below
+    const lbl = document.createElement('div');
+    lbl.textContent = monthNames[i];
+    lbl.style.cssText = `flex:1; text-align:center; font-size:9px; font-family:var(--mono); color:${isCurrentMonth ? 'var(--accent)' : 'var(--muted)'}; font-weight:${isCurrentMonth ? '600' : '400'};`;
+    labelsEl.appendChild(lbl);
+  });
+}
+
+// ======= MOBILE SECTION NAV =======
+function showSection(name, btn) {
+  // Show/hide panels
+  document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+  const target = document.getElementById('panel-' + name);
+  if (target) target.classList.add('active');
+
+  // Nav active state
+  document.querySelectorAll('.bottom-nav-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+}
+
+// ======= INIT =======
+calc();
+renderToppings();
+renderTracker();
+renderAnnual();
+// Show impasto panel by default
+showSection('impasto', document.querySelector('.bottom-nav-btn'));
+</script>
+</body>
+</html>
