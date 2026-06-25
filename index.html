@@ -536,6 +536,12 @@ input[type="range"]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;b
           <ul class="selected-list" id="selected-list"></ul>
         </div>
 
+        <div style="margin-top:1rem; margin-bottom:1rem;">
+          <button onclick="enregistrerPizza()" style="width:100%; padding:13px; background:var(--ink); border:none; border-radius:var(--radius); color:var(--cream); font-family:var(--font); font-size:14px; font-weight:600; cursor:pointer; letter-spacing:0.02em; transition:opacity .15s;" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+            🍕 Enregistrer cette pizza
+          </button>
+        </div>
+
         <!-- GARNITURES INLINE -->
         <div class="section-sep"><span>Garnitures</span></div>
 
@@ -548,12 +554,6 @@ input[type="range"]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;b
         </div>
 
         <div class="garnitures-grid" id="topping-grid"></div>
-
-        <div style="margin-top:1rem;">
-          <button onclick="enregistrerPizza()" style="width:100%; padding:13px; background:var(--ink); border:none; border-radius:var(--radius); color:var(--cream); font-family:var(--font); font-size:14px; font-weight:600; cursor:pointer; letter-spacing:0.02em; transition:opacity .15s;" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
-            🍕 Enregistrer cette pizza
-          </button>
-        </div>
 
       </div>
     </div>
@@ -1008,21 +1008,18 @@ function updateProtocole() {
   // ── 1. PRÉPARATION LEVURE / LEVAIN ──
   let levSection = '';
   if (levType === 'seche') {
-    levSection = section('🧂', 'Levure sèche', '15 min avant pétrissage',
+    levSection = section('🧂', 'Levure sèche', 'Incorporation directe',
       steps([
-        '<strong>Mesurer</strong> 30–40 ml d\'eau tiède (35–38°C) prélevée sur le total de la recette.',
-        '<strong>Verser la levure sèche</strong> dans l\'eau tiède. Ne jamais dépasser 40°C — la levure mourrait.',
-        '<strong>Attendre 5–10 min</strong> jusqu\'à formation d\'une mousse en surface. Si pas de mousse, la levure est morte — recommencer.',
-      ]) + alert('⚠️ Le sel tue la levure. Ne jamais les mélanger directement.')
+        '<strong>Peser la levure sèche</strong> (voir recette). La levure sèche active instantanée s\'incorpore directement dans la farine — pas besoin de réhydratation préalable.',
+        '<strong>Mélanger farine + levure sèche</strong> à sec avant d\'ajouter l\'eau. La levure se répartit uniformément dans la masse.',
+      ]) + tip('✦ La levure sèche et le sel peuvent cohabiter dans la pâte sans problème — le mythe du sel qui tue la levure ne s\'applique pas aux concentrations pizza.')
     );
   } else if (levType === 'fraiche') {
     levSection = section('🧊', 'Levure fraîche', 'Au moment du pétrissage',
       steps([
-        '<strong>Sortir la levure fraîche</strong> du réfrigérateur 30 min avant. Elle s\'active mieux à température ambiante.',
-        '<strong>Émietter finement</strong> la levure directement dans l\'eau froide ou tempérée (max 25°C). Ne jamais utiliser d\'eau chaude.',
-        '<strong>Mélanger doucement</strong> jusqu\'à dissolution complète.',
-      ]) + alert('⚠️ Jamais de contact direct sel-levure. Toujours les dissoudre séparément.')
-      + tip('✦ La levure fraîche est 3× plus puissante en volume que la sèche. Elle donne un arôme légèrement plus lacté.')
+        '<strong>Sortir la levure fraîche</strong> du réfrigérateur. Elle peut être incorporée froide — pas besoin de la tempérer.',
+        '<strong>Émietter ou dissoudre</strong> la levure directement dans l\'eau ou dans la farine. Les deux méthodes fonctionnent.',
+      ]) + tip('✦ La levure fraîche est 3× plus puissante en volume que la sèche. Le contact avec le sel dans la pâte ne pose aucun problème — les pizzaiolos napolitains ne s\'en préoccupent pas.')
     );
   } else {
     const levPct = Math.round(LEV_TABLE.levain[ferm] * 100);
@@ -1031,7 +1028,7 @@ function updateProtocole() {
         '<strong>J-1 matin :</strong> nourrir le levain au ratio 1:2:2 (1 levain, 2 farine, 2 eau tiède). Laisser à 24–26°C.',
         '<strong>J-1 soir :</strong> second rafraîchi 1:1:1. Le levain double en 4–6h — c\'est bon signe.',
         '<strong>Test du pic :</strong> le levain doit être bombé, bulleux, avec une odeur yogourt légèrement acidulée. Test flottaison : une noisette doit flotter dans l\'eau froide.',
-        `<strong>Prélever ${levPct}% du poids de farine</strong> (déjà calculé dans la recette). Le reste est votre chef à conserver.`,
+        `<strong>Prélever ${levPct}% du poids de farine</strong> (déjà calculé dans la recette). Le reste est ton chef à conserver.`,
       ]) + alert('⚠️ Un levain utilisé après son pic donne une pâte trop acide et un gluten dégradé.')
       + tip('✦ Température eau directe : en été 14–16°C, en hiver 20–22°C. Viser une pâte finale à 23–25°C.')
     );
@@ -1041,20 +1038,17 @@ function updateProtocole() {
   let petrissageContent = '';
   if (levType === 'levain') {
     petrissageContent = steps([
-      '<strong>Dissoudre le sel</strong> dans l\'eau directe (voir recette — l\'eau du levain est déjà comptée dans le levain). Réserver 10% de cette eau.',
-      '<strong>Autolyse (optionnel mais recommandé) :</strong> mélanger farine + eau directe sans sel ni levain. Reposer 20–30 min. Améliore l\'extensibilité et réduit le pétrissage.',
-      '<strong>Incorporer le levain</strong> et le sel. Mélanger jusqu\'à homogénéité.',
-      '<strong>Ajouter les 10% d\'eau restants</strong> en filet (bassinage). La pâte doit absorber complètement avant d\'en rajouter.',
+      '<strong>Mélanger tous les ingrédients</strong> : eau directe, farine, sel, levain. Pas d\'ordre strict obligatoire — l\'important est d\'obtenir une masse homogène.',
+      '<strong>Autolyse (optionnel mais recommandé) :</strong> mélanger farine + eau directe 20–30 min avant d\'ajouter sel et levain. Améliore l\'extensibilité et réduit le pétrissage.',
+      '<strong>Bassinage :</strong> incorporer les 10% d\'eau restants en filet une fois la pâte formée. Absorber complètement avant d\'en rajouter.',
       '<strong>Pétrir 15–20 min à la main</strong> ou 10 min au pétrin vitesse lente. La pâte au levain est plus collante — normal.',
-      '<strong>Test du voile :</strong> étirer un morceau de pâte — elle doit devenir translucide sans se déchirer. Gluten bien développé.',
+      '<strong>Test du voile :</strong> étirer un morceau de pâte — elle doit devenir translucide sans se déchirer.',
     ]) + tip('✦ Ne pas trop pétrir — le levain continue de développer le gluten pendant la fermentation.');
   } else {
     petrissageContent = steps([
-      '<strong>Dissoudre le sel</strong> dans l\'eau froide. Réserver 10% pour la fin.',
-      '<strong>Incorporer la farine</strong> progressivement en mélangeant jusqu\'à absorption complète. Éviter les grumeaux secs.',
-      levType === 'seche'
-        ? '<strong>Ajouter la levure réhydratée</strong> puis les 10% d\'eau restants en filet.'
-        : '<strong>Ajouter l\'eau levurée</strong> puis les 10% restants en filet.',
+      '<strong>Mélanger tous les ingrédients</strong> : eau, farine, sel, levure. Pas d\'ordre strict — les pizzaiolos professionnels les incorporent directement ensemble.',
+      '<strong>Réserver 10% de l\'eau</strong> pour le bassinage final une fois la pâte formée.',
+      '<strong>Incorporer les 10% d\'eau restants</strong> en filet (bassinage). La pâte doit être homogène avant d\'en rajouter.',
       '<strong>Pétrir 20 min à la main</strong> (ou 10 min au pétrin vitesse lente) jusqu\'à obtenir une pâte lisse, élastique, non collante.',
       '<strong>Test du voile :</strong> la pâte doit s\'étirer en film translucide sans se déchirer.',
     ]);
