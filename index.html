@@ -292,7 +292,7 @@ input[type="range"]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;b
 <header>
   <div class="header-brand">
     <div class="header-title">Pizzaiolo</div>
-    <div class="header-sub">Napolitaine contemporaine</div>
+    <div class="header-sub">Calculateur de pâte</div>
   </div>
   <div class="header-badge">Forno &amp; Impasto</div>
 </header>
@@ -312,7 +312,7 @@ input[type="range"]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;b
       <div class="card-header">
         <span class="card-header-icon">🌾</span>
         <span class="card-header-title">Calculateur d'impasto</span>
-        <span class="card-header-note">Napolitaine</span>
+        <span class="card-header-note">Romaine · Napolitaine · Contemporaine</span>
       </div>
       <div class="card-body">
 
@@ -435,6 +435,22 @@ input[type="range"]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;b
             <button class="ferm-btn" data-h="72" onclick="onFermChange(72)">72h</button>
           </div>
         </div>
+
+        <div class="field-group">
+          <div class="field-label">
+            <span class="field-label-text">🌡️ Température du frigo</span>
+            <span class="field-label-note" id="lbl-fridge">4°C — référence</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <input type="range" id="slider-fridge" min="0" max="8" step="1" value="4" oninput="onFridgeChange(this.value)" style="flex:1;">
+            <div class="field-input-wrap" style="width:76px; flex:none;">
+              <input type="number" id="inp-fridge" value="4" min="0" max="8" step="1" oninput="onFridgeInput(this.value)" style="font-size:15px; padding:7px 8px;">
+              <div class="field-unit">°C</div>
+            </div>
+          </div>
+          <div id="fridge-warn" class="hydro-warning"></div>
+        </div>
+
         <div class="section-sep"><span>Recette calculée — Farine Tipo 00 W300</span></div>
 
         <!-- RÉSULTATS READ-ONLY -->
@@ -714,13 +730,39 @@ let state = {
   patonG:  280,
   patons:  4,
   ferm:    24,
+  fridgeTemp: 4,
   levType: 'levain',
   toppings: {},
 };
 
+// ======= CORRECTION TEMPÉRATURE FRIGO =======
+// Référence : 4°C. Règle Q10 approximative pour fermentation :
+// l'activité fermentaire double environ tous les 6-7°C.
+// On exprime ça comme un facteur multiplicatif sur le % de levure
+// pour compenser : plus froid → besoin d'un peu plus de levure
+// pour fermenter dans le même temps ; plus chaud → besoin de moins.
+function fridgeFactor(temp) {
+  // facteur = 2^((4 - temp) / 6.5)  → à 4°C facteur = 1 (référence)
+  return Math.pow(2, (4 - temp) / 6.5);
+}
+
+function fridgeAdvice(temp) {
+  if (temp <= 1) return { label: temp + '°C — très froid, fermentation quasi à l\'arrêt', tone: 'warn',
+    text: '🧊 À ' + temp + '°C, la fermentation est très ralentie (jusqu\'à 5–7 jours possibles sans sur-fermenter). Les durées 24/48/72h seront sous-fermentées — augmente la durée ou la quantité de levure/levain.' };
+  if (temp <= 3) return { label: temp + '°C — frigo bien réglé, zone froide', tone: 'ok',
+    text: '✓ Fermentation lente et stable, idéale pour les longues durées (48–72h). Bon compromis goût/contrôle.' };
+  if (temp <= 5) return { label: temp + '°C — référence standard', tone: 'ok',
+    text: '✓ Température de référence de l\'outil. Les % de levure/levain affichés sont calibrés pour cette plage.' };
+  if (temp <= 6) return { label: temp + '°C — frigo standard, légèrement chaud', tone: 'ok',
+    text: '✓ Fermentation légèrement accélérée. Surveille la pâte vers la fin de la durée choisie.' };
+  return { label: temp + '°C — chaud pour un frigo (porte, mal réglé)', tone: 'warn',
+    text: '⚠️ À ' + temp + '°C la fermentation est nettement plus rapide. Risque de sur-fermentation sur 72h — réduis la durée ou surveille la pâte (test du doigt) avant la fin programmée.' };
+}
+
 // ======= CORE CALC =======
 function computeRecette() {
-  const LEV_PCT  = LEV_TABLE[state.levType][state.ferm];
+  const baseLevPCT = LEV_TABLE[state.levType][state.ferm];
+  const LEV_PCT = baseLevPCT * fridgeFactor(state.fridgeTemp);
   const totalPate = state.patonG * state.patons;
 
   let farine, eau, sel, levure;
@@ -912,6 +954,31 @@ function onLevTypeChange(type, btn) {
   updateFermLabel();
 }
 
+function onFridgeChange(val) {
+  state.fridgeTemp = parseInt(val);
+  document.getElementById('inp-fridge').value = val;
+  updateFridgeLabel();
+  calc();
+}
+
+function onFridgeInput(val) {
+  const t = Math.max(0, Math.min(8, parseInt(val) || 4));
+  state.fridgeTemp = t;
+  document.getElementById('slider-fridge').value = t;
+  updateFridgeLabel();
+  calc();
+}
+
+function updateFridgeLabel() {
+  const adv = fridgeAdvice(state.fridgeTemp);
+  document.getElementById('lbl-fridge').textContent = adv.label;
+  const warnEl = document.getElementById('fridge-warn');
+  if (warnEl) {
+    warnEl.textContent = adv.text;
+    warnEl.className = 'hydro-warning visible ' + adv.tone;
+  }
+}
+
 function onFermChange(h) {
   state.ferm = parseInt(h);
   document.querySelectorAll('.ferm-btn').forEach(b => {
@@ -1000,6 +1067,7 @@ function updateProtocole() {
       ['Levure', levLabels[levType]],
       ['Hydratation', hydro + '%'],
       ['Fermentation', ferm + 'h à froid'],
+      ['Frigo', state.fridgeTemp + '°C'],
       ['Four', sp.four],
       ['Cuisson', sp.cuisson],
     )
@@ -1081,14 +1149,18 @@ function updateProtocole() {
   const boulage = section('⚽', 'Boulage', patonG + 'g par paton', boulageContent);
 
   // ── 5. FERMENTATION À FROID ──
+  const fTemp = state.fridgeTemp;
+  const fAdv = fridgeAdvice(fTemp);
   const fermContent = steps([
-    `<strong>Placer au réfrigérateur à 4°C</strong> pendant ${ferm}h. Ne pas ouvrir les boîtes — les chocs thermiques perturbent la fermentation.`,
+    `<strong>Placer au réfrigérateur à ${fTemp}°C</strong> pendant ${ferm}h. Ne pas ouvrir les boîtes — les chocs thermiques perturbent la fermentation.`,
     levType === 'levain'
-      ? `<strong>Le levain fermente lentement au froid :</strong> une augmentation de 50–70% de volume après ${ferm}h est normale.`
+      ? `<strong>Le levain fermente lentement au froid :</strong> une augmentation de 50–70% de volume après ${ferm}h est normale à 4°C — ${fTemp < 4 ? 'un peu moins à ' + fTemp + '°C' : fTemp > 4 ? 'un peu plus à ' + fTemp + '°C' : 'à cette température'}.`
       : `<strong>Vérifier à mi-parcours :</strong> les patons doivent avoir gonflé de 30–50%. S'ils ont doublé, ils sont prêts — sortir plus tôt.`,
     '<strong>Signal de réussite :</strong> en sortant les boîtes, appuyer du doigt — la pâte remonte lentement. Si instantané = sous-fermenté. Si elle ne revient pas = sur-fermenté.',
-  ]) + timings(['Durée', ferm + 'h'], ['Température', '4°C'], ['Sortir avant cuisson', sortir]);
-  const fermSection = section('❄️', 'Fermentation à froid', ferm + 'h à 4°C', fermContent);
+  ])
+  + (fAdv.tone === 'warn' ? alert(fAdv.text) : tip(fAdv.text))
+  + timings(['Durée', ferm + 'h'], ['Température frigo', fTemp + '°C'], ['Sortir avant cuisson', sortir]);
+  const fermSection = section('❄️', 'Fermentation à froid', ferm + 'h à ' + fTemp + '°C', fermContent);
 
   // ── 6. ÉTALAGE ──
   let etalageContent = '';
@@ -1607,6 +1679,7 @@ renderToppings();
 renderTracker();
 renderAnnual();
 updateFermLabel();
+updateFridgeLabel();
 </script>
 </body>
 </html>
